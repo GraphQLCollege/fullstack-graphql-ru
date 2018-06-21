@@ -1,6 +1,6 @@
-# Fullstack GraphQL
+# Фулстек GraphQL
 
-An open source book about full stack GraphQL development with React and Node.
+Общедоступная книга о фулстек-разработке с GraphQL, используя React и Node.
 
 <a href="https://graphql.college/fullstack-graphql">https://graphql.college/fullstack-graphql</a>.
 
@@ -8,35 +8,35 @@ An open source book about full stack GraphQL development with React and Node.
   <img src="manuscript/images/title_page.png" width="400px" alt="Cover" />
 </a>
 
-## Structure
+## Структура
 
-Each chapter is written in a markdown file in the `manuscript` folder.
+Каждая глава написана в файле формата markdown в каталоге `manuscript`.
 
-Every image in the book is located in `manuscript/images`.
+Каждое изображение книги находится в `manuscript/images`.
 
-The order of the chapters is determined by the `Book.txt` file.
+Порядок глав определяется файлом `Book.txt`.
 
-`Sample.txt` defines the content of the book's sample chapter.
+`Sample.txt` — содержимое для образца главы книги.
 
-## Contributing
+## Участие в проекте
 
-All types of contributions are welcome! Here is a little guide on how to contribute.
+Все типы участия приветствуются! Вот небольшой указатель, как можно внести свой вклад.
 
-### Bugs/Typos
+### Баги/Опечатки
 
-If you see a bug or typo please open a github issue.
+Если вы увидели баг или опечатку, пожалуйста, откройте ишью в этом репозитории на GitHub.
 
-### Fixes
+### Исправления
 
-To contribute with code fixes, please remix the example on Glitch and create a Pull Request referencing the fix's Glitch URL.
+Для исправления примера, пожалуйста, пересоздайте в Glitch и создайте пулреквест, ссылающиеся на URL-адрес в Glitch исправления.
 
-### New chapters
+### Новые главы
 
-Please file an issue to suggest new chapters. Chapter suggestions are always welcome! But please don't create a PR with a new chapter before discussing about it, because it may not get accepted. Your time is golden, use it well!
+Пожалуйста, создайте ишью для предложения новых глав. Предложения новых глав всегда приветствуются! Но, пожалуйста, не создавайте пулреквест с новой главой до обсуждения её, поскольку она может быть не принята. Время — золото, используйте его с умом!
 
-### Questions
+### Вопросы
 
-If you have any questions regarding the book, or GraphQL in general, please create a new conversation in https://spectrum.chat/graphql instead of a Github issue.
+Если у вас есть какие-либо вопросы относительно книги или GraphQL в целом, пожалуйста, создайте переписку в https://spectrum.chat/graphql вместо ишью на GitHub.
 
 ## License
 
@@ -45,4 +45,4 @@ If you have any questions regarding the book, or GraphQL in general, please crea
 ![NC](https://creativecommons.org/images/deed/nc_blue_x2.png)
 ![SA](https://creativecommons.org/images/deed/sa_blue_x2.png)
 
-This book is licensed under a [Creative Commons Attribution Non Commercial Share Alike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
+Данная книга распространяется на условиях лицензии [Creative Commons Attribution Non Commercial Share Alike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/).
