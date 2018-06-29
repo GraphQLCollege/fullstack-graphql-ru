@@ -1,61 +1,60 @@
-# PREFACE
+# ПРЕДИСЛОВИЕ
 
-GraphQL is revolutionizing client-server communication. It is a technology that enables better documented APIs, easier data management in HTTP clients, and optimized network usage.
+GraphQL — революционное решение в клиент-серверном взаимодействии. Эта технология позволяет лучше документировать API, облегчает управление данными в HTTP-клиентах и оптимизирует использование сети.
 
-One of the main benefits of GraphQL is that improves communication between APIs and API consumers. Facilitates team communication by providing an easy way for frontend developers to know all methods that the API exposes. It also enables better communication with 3rd party API consumers because GraphQL services have zero configuration API documentation.
+Одно из основных преимуществ GraphQL — улучшение взаимодействия между API и её пользователями. Кроме этого, технология позволяет улучшить взаимодействие в команде разработчиков, предоставляя им информацию о методах взаимодействия с API. Он также обеспечивает лучшее взаимодействие с сторонними пользователями API, поскольку у сервисам GraphQL не требуется конфигурация для документации API.
 
-It empowers clients by giving them complete data fetching control. GraphQL lets clients ask for the exact data that they need. Not more, not less. It also lets clients ask for nested resources in the same operation, avoiding the need for REST-style cascading requests. REST tends to push complexity to API clients.
+Учитывая вышесказанное GraphQL расширяет возможности клиентов, давая им полный контроль над получением данных. GraphQL позволяет клиентам запрашивать только те данные, которые им нужны, — ни больше ни меньше. Технология также предоставляет возможность запрашивать и вложенные данные, используя один запрос и избегая нескольких простых запросов, как это принято в RESTful API. REST порождает тенденцию к сложности использования API для клиентов.
 
-Another benefit of GraphQL is that it optimizes network usage by reducing HTTP payloads and number of requests. Reducing data and requests directly maps to a better experience for mobile users.
+Как следствие GraphQL оптимизирует использование сети за счёт уменьшения отправляемых данных и количества HTTP-запросов. Данное преимущество особенно заметно при взаимодействии с мобильными клиентами, где интернет-трафик играет важную роль.
 
-## So, what is GraphQL?
+## Итак, что же такое GraphQL?
 
-GraphQL is a domain specific typed language to design and query data.
+GraphQL — типизированный предметно-ориентированный язык для проектирования и запросов данных.
 
-A domain specific language, or DSL, is a language built for a single application domain. They are the opposite of general purpose languages like Javascript, Ruby, Python or C, which are applicable across different domains. There are many popular DSLs in use nowadays, CSS is a DSL for styling and HTML is a DSL for markup. GraphQL is a DSL for data.
+Предметно-ориентированный язык или DSL — это язык, созданный для единственной предметной области приложения; он противоположен языкам общего назначения, таким как JavaScript, Ruby, Python или C, которые применяются для решения самых разных задач. В настоящее время существует множество популярных DSL: CSS — DSL для стилизации, а HTML — DSL для разметки. И вот GraphQL — это DSL для данных.
 
-It is a typed language. This means that it uses types to define resources, it adds types to each resource's fields. It also uses types to statically check for errors. Being a typed language is the source of many of GraphQL's biggest assets, like enabling automatic API introspection and documentation.
+GraphQL — это типизированный язык, а это значит, что он использует типы для определения ресурсов, он добавляет типы в поля каждого ресурса. Он также использует типы для статической проверки ошибок. Быть типизированным языком значит являться источником самых больших достоинств GraphQL, таких как автоматическая интроспекция API и документация.
 
-GraphQL's domain is data. It can be used to design a schema that represents data and also to ask for specific fields on data.
+Предметная область GraphQL — это данные. Он может использоваться для разработки схемы, представляющей данные, а также для запроса определённых полей данных.
 
-Developing API servers and clients is the main use case of GraphQL. Backend developers can use GraphQL to model their data, while frontend developers can use GraphQL to write queries to retrieve specific bits of data.
+Разработка серверов и клиентов API является основным вариантом использования GraphQL. Бэкенд-разработчики могут использовать GraphQL для моделирования своих данных, в то время как фронтенд-разработчики могут использовать GraphQL для формулирования запросов для получения определённых частей данных.
 
-Even though services generally expose GraphQL through their HTTP layer, GraphQL is not tied to HTTP or any other communication protocol.
+Даже несмотря на то, что сервисы обычно выставляют GraphQL через свой HTTP-уровень, GraphQL не привязан к HTTP или любому другому протоколу передачи данных.
 
-GraphQL is a specification. This means that it specifies how it should work, allowing anyone to implement GraphQL in any programming language. There is an official implementation in Javascript called `graphql-js`, but there are also many other incarnations in other programming languages like Ruby, Elixir and more.
+GraphQL — это спецификация. Это означает, что он указывает, как он должен работать, позволяя любому реализовать его на любом языке программирования. Существует официальная реализация на JavaScript под названием `graphql-js`, но есть также множество других реализаций на разных языках программирования, таких как Ruby, Elixir и т.д.
 
-## Organization of the book
+## Организация книги
 
-With this book you will learn how to develop a complete GraphQL client-server application from scratch. You will learn how to fetch data from the client, how to design that data in the server, how to develop NodeJS GraphQL servers and finally how to create React GraphQL clients.
+В этой книге вы узнаете, как с нуля разработать законченное клиент-серверное приложение, использующее GraphQL. Вы узнаете, как получать данные от клиента, как проектировать эти данные на сервере, как разрабатывать серверы GraphQL на Node.js и, наконец, как создавать клиенты React с использованием GraphQL.
 
-The first two chapters will teach you how to fetch data using GraphQL. The first chapter will teach you how to create data. The second chapter will teach you how to design schemas. You will learn these pure GraphQL concepts, without the need of thinking about HTTP servers or clients. GraphQL is an abstraction that allows you to think about data without worrying about transport. You will build a schema, queries and mutations using Javascript and a couple of GraphQL libraries.
+Первые две главы расскажут вам, как получать данные с помощью GraphQL. В первой главе вы познакомитесь с тем, как создавать данные. Во второй главе вы узнаете, как проектировать схемы. Вы узнаете эти чистые концепции GraphQL, без нужды задумываться о HTTP-серверах или клиентах. GraphQL — это абстракция, которая позволяет вам думать о данных, не беспокоясь о том, как они будут передаваться. Вы создадите схему, запросы и мутации с помощью JavaScript и нескольких библиотек GraphQL.
 
-The rest of the chapters will focus on building GraphQL servers and clients.
+Остальные главы будут посвящены созданию серверов и клиентов GraphQL.
 
-The third chapter, GraphQL APIs, will teach you how build GraphQL HTTP servers using NodeJS and Apollo server. You will learn how to expose a GraphQL schema over HTTP, how to connect to a database, how to handle authentication and authorization and how to organize your files.
+В третьей главе, API GraphQL, вы узнаете, как создавать HTTP-серверы GraphQL с использованием серверов Node.js и Apollo. Вы узнаете, как сделать доступной схему GraphQL через HTTP, как подключаться к базе данных, как обрабатывать аутентификацию и авторизацию и как должны организованы ваши файлы.
 
-In the fourth chapter, GraphQL Clients, you will learn how to write GraphQL clients using React and Apollo client. You will learn how to ask for and create data using Apollo's `Query` and `Mutation` components, and also how to handle authentication.
+В четвёртой главе, Клиенты GraphQL, вы научитесь разрабатывать клиенты GraphQL с помощью клиента React и Apollo. Вы узнаете, как запрашивать и создавать данные с использованием Apollo-компонентов `Query` и `Mutation`, а также как обрабатывать аутентификацию.
 
-The fifth chapter will teach you how to add real time functionality to your GraphQL applications using Subscriptions. Subscriptions provide GraphQL APIs the ability to push data to the clients.
+В пятой главе вы освоите добавление функциональности, работающей в режиме реального времени к вашим приложениям GraphQL с помощью подписок (Subscriptions). Подписки предоставляют API-интерфейсам GraphQL возможность передавать данные клиентам.
 
-You will learn how to test GraphQL APIs and clients in the sixth chapter.
+Наконец, в шестой главе вы познакометесь, как тестировать API и клиенты GraphQL.
 
-## Sample application
+## Пример приложения
 
-Through the course of this book you will learn how to build a Pinterest clone called Pinapp using GraphQL, NodeJS, React and Apollo client.
+В ходе этой книги вы узнаете, как создать клон сервииса Pinterest под названием Pinapp с использованием GraphQL, Node.js, React и клиента Apollo.
 
-Pinapp should allow users to:
+У Pinapp определены следующие требования:
 
-* Login with magic links
-* Logout
-* Add pins (a pin is an image that links to a URL)
-* Search pins and users
-* List pins
-* See new pins without refreshing browser
+* Вход с помощью магических ссылок
+* Выход из приложения
+* Добавление «кнопки» (pins) («кнопка» — это изображение со ссылкой на URL-адрес)
+* Возможность поиска «кнопок» и пользователей
+* Просмотр списка «кнопок»
+* Просмотр новых «кнопок» без обновления браузера
 
-You will build this application in layers. First you will design the data layer, then write the business logic, after that create HTTP transport layer, then connect everything to the database layer and finally build the HTTP client.
+Вы создадите это приложение слоями. Сначала вы создадите слой данных, затем напишите бизнес-логику, после чего перейдёте к транспортному уровню HTTP, а затем соедините всё это с уровнем базы данных и, наконец, реализуете HTTP-клиент.
 
-## Development environment
+## Окружение для разработки
 
-There are no environment requirements to try the examples in this book, other than having a web browser and internet connection. Every step of the application has a live, editable online version hosted at glitch.com. Glitch is an awesome community to build apps created by the folks that developed Stack Overflow and Trello.
-
+Нет никаких требований к окружению, чтобы посмотреть вживую на примеры из этой книги, кроме наличия браузера и подключения к Интернету. На каждом шаге приложения есть работающая и редактируемая онлайн-версия, размещённая на glitch.com. Glitch — потрясающее сообщество для создания приложений, созданное людьми, которые разработали Stack Overflow и Trello.
