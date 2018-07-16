@@ -1,10 +1,10 @@
-# 2. Data modeling
+# 2. Моделирование данных
 
-In the previous chapter you learned how to read and write data by sending queries against a schema using the GraphQL query language. In this chapter you will learn how to model the data behind the queries using schemas and types. To create this schema you will use the GraphQL Schema Definition Language (also called SDL, not to be confused with LSD).
+В предыдущей главе вы узнали, как читать и записывать данные, отправляя запросы к схеме с использованием языка запросов GraphQL. В этой главе вы научитесь, как моделировать данные, лежащие в основе запросов, используя схемы и типы. Чтобы создать эту схему, вы будете использовать язык определения схемы (Schema Definition Language) GraphQL (также называемый SDL, чтобы не путать с LSD).
 
-Whereas the previous chapter focused on how clients interact with servers using GraphQL, this chapter will tackle how to expose a data model that clients can consume.
+В то время как предыдущая глава была посвящена тому, как клиенты взаимодействуют с серверами, используя GraphQL, в этой главе будет рассмотрен вопрос, как предоставить модель данных, которую могут использовать клиенты.
 
-Remember the Pinterest clone we talked about in the introduction? After learning the concepts behind GraphQL schemas and types, you will design its data model at the end of this chapter.
+Помните клон Pinterest, о котором мы говорили во введении? Изучив концепции схем и типов GraphQL, вы разработаете модель данных в конце этой главы.
 
 ## 2.1 Schema, types and resolvers
 
