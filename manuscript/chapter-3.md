@@ -1,6 +1,6 @@
-# 3. GraphQL APIs
+# 3. API-интерфейсы GraphQL
 
-The most common way of exposing a GraphQL schema is with an HTTP server. Building GraphQL APIs is much more than just designing schemas. This chapter will teach you how to create robust, layered GraphQL APIs.
+HTTP-сервер — наиболее распространённый способ предоставить схему GraphQL. Создание API-интерфейсов GraphQL — это гораздо больше, чем просто проектирование схем. В этой главе вы узнаете, как создавать надежные, многоуровневые API-интерфейсы GraphQL.
 
 ![Server](images/server.png)
 
