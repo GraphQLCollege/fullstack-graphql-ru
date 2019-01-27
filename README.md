@@ -1,6 +1,6 @@
-# Фулстек GraphQL
+# Полностековый GraphQL (русский перевод)
 
-Общедоступная книга о фулстек-разработке с GraphQL с использованием React и Node.
+Книга о фулстек-разработке GraphQL с помощью React и Node.
 
 <a href="https://graphql.college/fullstack-graphql">https://graphql.college/fullstack-graphql</a>.
 
@@ -10,7 +10,7 @@
 
 ## Структура
 
-Каждая глава написана в файле формата Markdown в каталоге `manuscript`.
+Каждая глава написана в файлах формата Markdown в каталоге `manuscript`.
 
 Каждое изображение книги находится в `manuscript/images`.
 
