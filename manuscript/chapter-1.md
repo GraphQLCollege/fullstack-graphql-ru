@@ -1,71 +1,42 @@
-# 1. Чтение и запись
+# 1. Reading and writing data
 
-В этой главе вы узнаете, как использовать GraphQL с точки зрения разработчика.
-Объясняется, как использовать queries* (Запросы) и mutations (Мутации) 
-для чтения и записи данных сервера GraphQL.
+In this chapter you will learn how to use GraphQL from a frontend developer's perspective. This chapter explains how to use queries and mutations to read and write data from GraphQL.
 
-> `*` Термины "queries", "mutations" и "subscriptions", используемые в рамках этой книги, 
-помимо основного значения являются и самостоятельными определениями, 
-которые обозначают типы запросов на сервер: "Запросы", "Мутации" и "Подписки" соответсвенно.
-> Здесь и далее — прим. пер.
+![Queries and mutations](images/graphql-schema.png)
 
-![Запросы и Мутации](images/graphql-schema.png)
+As you continue to learn the ins and outs of GraphQL, you will realize that it is a technology that makes life much easier for frontend developers. It gives them complete control of the data that they want from the server.
 
-По мере изучения возможностей GraphQL, вы поймете, что это та технология, 
-которая делает жизнь намного проще для frontend-разработчиков.
-GraphQL предоставляет полный контроль над данными, которые можно получить с сервера.
+Making life easier for clients has been one of the main goals for the team that created GraphQL. The evolution of the language has been the result of [Client-Driven development](https://youtu.be/vQkGO5q52uE).
 
-Сделать жизнь проще для клиента — это одна из главных задач для создателей GraphQL. 
-Результат эволюции языка демонстрирует следующий доклад: [Client-Driven Development](https://youtu.be/vQkGO5q52uE).
+## 1.1 Queries and Mutations
 
-## 1.1 Запросы и Мутации
+In its simplest form, GraphQL is all about asking for specific fields of objects.
 
-В самом простом виде GraphQL предоставляет возможность запрашивать набор полей (fields).
+The GraphQL query language defines how to interact with data using GraphQL's queries and mutations. Queries let you ask for data, whereas Mutations let you write data. Queries serve the same purpose as REST's GET requests, and you could think of mutations as analogous to REST's POST, PUT, PATCH and DELETE requests.
 
-Сам язык GraphQL определяет, как именно взаимодейтствовать с сервером. 
-Запросы, в эталонном их виде, служат для получения данных, в то время как мутации 
-требуются для того, чтобы эти данные записывать. Запросы служат той же цели, 
-что и GET в старом добром REST, а мутации аналогичны методам POST, PUT, PATCH и DELETE.
+The rest of this chapter will teach you the following features of GraphQL syntax:
 
-В этой главе вы узнаете о следующих особенностях синтаксиса GraphQL:
+* Basic query
+* Query nested fields
+* Query multiple fields
+* Operation name
+* Arguments
+* Aliases
+* Fragments
+* Variables
+* Directives
+* Default variables
+* Mutations
+* Inline fragments
+* Meta fields
 
-* Простые запросы
-* Вложенные поля
-* Получение нескольких полей
-* Наименование операций
-* Аргументы
-* Псевдонимы
-* Фрагменты
-* Переменные
-* Директивы
-* Переменные по умолчанию
-* Мутации
-* Встроенные (inline) фрагменты
-* Метаинформация
+All concepts that you will learn have a runnable example, implemented using [`graphql-js`](https://github.com/graphql/graphql-js). GraphQL JS is the reference implementation of GraphQL, built with Javascript. This library exports a function called `graphql` which lets us send a query to a GraphQL schema.
 
-Все концепции, о которых вы узнаете, имеют примеры, 
-реализованные с помощью [`graphql-js`](https://github.com/graphql/graphql-js). 
-GraphQL JS — эталонная реализация GraphQL, написанная на JavaScript. 
-Сама библиотека предоставляет функцию с именем «graphql», которая позволяет 
-передать запрос в схему GraphQL.
+The examples in this chapter contain a sample GraphQL schema. Don't worry if you don't understand it yet. We will focus on the querying part in this chapter, while the next one will focus on how to create the schema. Please note that this schema returns mock data, so don't expect much more than random numbers or a bunch of `"Hello world"`. The next chapter will teach you how to design this schema properly.
 
-Примеры в этой главе уже содержат базовую реализацию схемы GraphQL. 
-Не беспокойтесь, если вы еще не понимаете, как всё это работает. 
-В этой главе мы сосредоточимся на самих GraphQL запросах, в то время как уже следующая 
-будет посвящена созданию своей схемы. Обратите внимание, что приведённая схема содержит очень простую реализацию, 
-поэтому не ожидайте большего, нежели случайные числа или классический «Hello world» в качестве ответов сервера.
-Следующая глава научит вас правильно проектировать эту схему.
+Even though GraphQL is meant to be exposed by an HTTP server and consumed by an HTTP client, running GraphQL queries using Javascript will help you understand the basics of the language, without any overhead.
 
-Несмотря на то, что GraphQL предназначен для использования HTTP-клиентами и взаимодействет с HTTP-сервером, 
-выполнение запросов с использованием консоли JavaScript поможет понять основы 
-языка без каких-либо накладных расходов, т.е. без настройки сервера и прочего.
-
-Му воспользуемся функцией `graphql`, которая экспортируется из ` graphql-js`. 
-В простейшем виде она принимает два аргумента и возвращает объект Promise. 
-Первый аргумент — это объект схемы GraphQL. 
-Второй аргумент — это строка, содержащая запрос GraphQL. 
-Все примеры в этой главе расскажут вам, как написать этот запрос. 
-Если же вы хотите узнать чуть больше, то всегда можно воспользоваться [документацией по API `graphql-js`](http://graphql.org/graphql-js/graphql/#graphql).
+You will use a function called `graphql`, which `graphql-js` exports. The main use case of this function receives two arguments and returns a promise. The first argument is an object that represents a GraphQL schema. The second argument is a string containing a GraphQL query. All examples in this chapter will teach you how to write this query string. Please refer to the [API documentation of `graphql-js`](http://graphql.org/graphql-js/graphql/#graphql) to know more about it.
 
 ```js
 const { graphql } = require("graphql");
@@ -79,28 +50,17 @@ graphql(schema, query).then(result =>
 );
 ```
 
-Воспользуйтесь [копированием этого примера в сервис glitch](https://glitch.com/edit/#!/remix/pinapp-queries-mutations), 
-чтобы получить возможность сразу же запустить и проверить в действии код, приведённый в этой главе. 
-Это даст вам полную свободу над проектом. Вы можете модифицировать его по своему усмотрению, 
-запускать скрипты с помощью консоли и даже экспортировать его в github.
+Remix this example on glitch to run all the queries in this chapter. Remixing means creating your own copy of a project. This will give you complete freedom over the project. You can modify it at will, run scripts using a console, and even export it to github.
 
-После копирования этого проекта вы можете запустить любой из скриптов в папке `queries`.
-Далее откройте консоль, нажав «Logs», а затем «Console». И выполните `node query/1-query.js`, 
-чтобы просмотреть выходные данные первого скрипта.
+[Remix queries and mutations example](https://glitch.com/edit/#!/remix/pinapp-queries-mutations)
 
-Теперь у вас есть все необходимое, чтобы начать изучение синтаксиса GraphQL. 
-Давайте уже приступим к отправке основных запросов.
+Once you have remixed this project, you can run any of the scripts in the `queries` folder. Try it out by opening the URL of your remixed project. After you open it, open its console by clicking "Logs" and then "Console". Run `node queries/1-query.js` to see the output of the first script.
 
-## 1.2 Запрос
+You have everything you need to start learning GraphQL query syntax. Let's start by sending basic queries.
 
-Как мы уже говорили в начале этой главы, GraphQL предоставляет возможность запрашивать конкретные поля объектов. 
-Т.е. запрос определяет, какие именно поля будет иметь ответ GraphQL в формате JSON*.
-Синтаксис языка запросов очень похож на формат объектов в JSON, с перечиследнием ключей без их значений. 
-Например, если вы хотите получить список пользователей, 
-каждый из которых имеет поле электронной почты, вы можете написать следующий запрос:
+## 1.2 Query
 
-> `*` GraphQL не накладывает никаких ограничений на формат ответов сервера, однако JSON 
-является самым популярным и довольно читаемым вариантом — Прим.пер.
+As we said at the start of this chapter, GraphQL is all about asking for specific fields of objects. A query defines which fields the GraphQL JSON response will have. The syntax for achieving this looks similar to writing a JSON object with just the keys, excluding the values. For example, if you wanted to get a list of users, each one with an email field, you could write the following query:
 
 ```graphql
 {
@@ -110,9 +70,7 @@ graphql(schema, query).then(result =>
 }
 ```
 
-Вы можете передать этот запрос вместе со схемой в функцию `graphql`.
-Помните, что именно второй аргумент, передаваемый в функцию `graphql` и является строкой запроса. 
-Давайте посмотрим пример кода.
+You can send the previous query along with the example schema to the `graphql` function. Remember, the second argument that `graphql` receives is a query string. Let's see an example script.
 
 `queries/1-query.js`
 
@@ -134,10 +92,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-Запуск этого скрипта в консоли вернёт ответ, с корневым полем `"data"` в котором есть все поля, 
-которые вы указали в запросе. Внутри этого поля вы увидите структуру, которая точно соответствует запросу, 
-который мы отправили. В качестве значения поля `"data"` вы увидите ключ `"users"`, который в свою 
-очередь содержит массив объектов с ключом `"email"`.
+Running the previous script in the console returns a response that has all the fields that you asked for in the query, plus it has a top level `"data"` key. Inside that key, you will see a structure that matches exactly the query that we sent. It has a `"users"` key, which contains an array of objects with an `"email"` key.
 
 ```bash
 $ node queries/1-query.js
