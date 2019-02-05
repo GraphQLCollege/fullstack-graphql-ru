@@ -1,38 +1,27 @@
 # 1. Чтение и запись
 
-В этой главе вы узнаете, как использовать GraphQL с точки зрения разработчика.
-Объясняется, как использовать queries* (Запросы) и mutations (Мутации) 
-для чтения и записи данных сервера GraphQL.
+В этой главе вы узнаете, как использовать GraphQL с точки зрения разработчика. Объясняется, как использовать запросы[^queries_note] и мутации для чтения и записи данных сервера GraphQL.
 
-> `*` Термины "queries", "mutations" и "subscriptions", используемые в рамках этой книги, 
-помимо основного значения являются и самостоятельными определениями, 
-которые обозначают типы запросов на сервер: "Запросы", "Мутации" и "Подписки" соответсвенно.
-> Здесь и далее — прим. пер.
+[^queries_note]: Термины **queries**, **mutations** и **subscriptions**, используемые в рамках этой книги, помимо основного значения являются и самостоятельными определениями, которые обозначают типы запросов на сервер: запросы, мутации и подписки, соответственно. — Здесь и далее прим. пер.
 
-![Запросы и Мутации](images/graphql-schema.png)
+![Запросы и мутации](images/graphql-schema.png)
 
-По мере изучения возможностей GraphQL, вы поймете, что это та технология, 
-которая делает жизнь намного проще для frontend-разработчиков.
-GraphQL предоставляет полный контроль над данными, которые можно получить с сервера.
+По мере изучения возможностей GraphQL, вы поймете, что это та технология, которая делает жизнь намного проще для фронтенд-разработчиков. GraphQL предоставляет полный контроль над данными, которые можно получить с сервера.
 
-Сделать жизнь проще для клиента — это одна из главных задач для создателей GraphQL. 
-Результат эволюции языка демонстрирует следующий доклад: [Client-Driven Development](https://youtu.be/vQkGO5q52uE).
+Сделать жизнь проще для клиента — это одна из главных задач создателей GraphQL. Результат эволюции языка демонстрирует следующий доклад: [Client-Driven Development](https://youtu.be/vQkGO5q52uE).
 
-## 1.1 Запросы и Мутации
+## 1.1 Запросы и мутации
 
 В самом простом виде GraphQL предоставляет возможность запрашивать набор полей (fields).
 
-Сам язык GraphQL определяет, как именно взаимодейтствовать с сервером. 
-Запросы, в эталонном их виде, служат для получения данных, в то время как мутации 
-требуются для того, чтобы эти данные записывать. Запросы служат той же цели, 
-что и GET в старом добром REST, а мутации аналогичны методам POST, PUT, PATCH и DELETE.
+Сам язык GraphQL определяет, как именно взаимодействовать с сервером. Запросы, в эталонном их виде, служат для получения данных, в то время как мутации требуются для того, чтобы эти данные записывать. Запросы служат той же цели, что и GET-запросам в старом добром REST, а мутации аналогичны методам POST, PUT, PATCH и DELETE.
 
-В этой главе вы узнаете о следующих особенностях синтаксиса GraphQL:
+В этой главе вы узнаете о следующих возможностях синтаксиса GraphQL:
 
-* Простые запросы
-* Вложенные поля
-* Получение нескольких полей
-* Наименование операций
+* Простой запрос
+* Запрос вложенных полей
+* Запрос нескольких полей
+* Наименование операции
 * Аргументы
 * Псевдонимы
 * Фрагменты
@@ -40,32 +29,16 @@ GraphQL предоставляет полный контроль над данн
 * Директивы
 * Переменные по умолчанию
 * Мутации
-* Встроенные (inline) фрагменты
+* Встроенные фрагменты
 * Метаинформация
 
-Все концепции, о которых вы узнаете, имеют примеры, 
-реализованные с помощью [`graphql-js`](https://github.com/graphql/graphql-js). 
-GraphQL JS — эталонная реализация GraphQL, написанная на JavaScript. 
-Сама библиотека предоставляет функцию с именем «graphql», которая позволяет 
-передать запрос в схему GraphQL.
+Все концепции, о которых вы узнаете, имеют примеры, реализованные с помощью [`graphql-js`](https://github.com/graphql/graphql-js). GraphQL JS — эталонная реализация GraphQL, написанная на JavaScript. Сама библиотека предоставляет функцию `graphql, позволяющая передать запрос в схему GraphQL.
 
-Примеры в этой главе уже содержат базовую реализацию схемы GraphQL. 
-Не беспокойтесь, если вы еще не понимаете, как всё это работает. 
-В этой главе мы сосредоточимся на самих GraphQL запросах, в то время как уже следующая 
-будет посвящена созданию своей схемы. Обратите внимание, что приведённая схема содержит очень простую реализацию, 
-поэтому не ожидайте большего, нежели случайные числа или классический «Hello world» в качестве ответов сервера.
-Следующая глава научит вас правильно проектировать эту схему.
+Примеры в этой главе уже содержат базовую реализацию схемы GraphQL. Не волнуйтесь, если вы еще не понимаете, как всё это работает. В этой главе мы сосредоточимся на самих GraphQL-запросах, в то время как следующая будет посвящена созданию схемы. Обратите внимание, что приведённая схема содержит очень простую реализацию, поэтому не ожидайте большего, кроме случайных чисел или классический «Hello world» в качестве ответов сервера. Следующая глава научит вас правильно проектировать эту схему.
 
-Несмотря на то, что GraphQL предназначен для использования HTTP-клиентами и взаимодействет с HTTP-сервером, 
-выполнение запросов с использованием консоли JavaScript поможет понять основы 
-языка без каких-либо накладных расходов, т.е. без настройки сервера и прочего.
+Несмотря на то, что GraphQL предназначен для использования HTTP-клиентами и работает с HTTP-сервером, выполнение запросов с использованием JavaScript-консоли поможет понять основы языка без каких-либо накладных расходов, т.е. без настройки сервера и прочего.
 
-Му воспользуемся функцией `graphql`, которая экспортируется из ` graphql-js`. 
-В простейшем виде она принимает два аргумента и возвращает объект Promise. 
-Первый аргумент — это объект схемы GraphQL. 
-Второй аргумент — это строка, содержащая запрос GraphQL. 
-Все примеры в этой главе расскажут вам, как написать этот запрос. 
-Если же вы хотите узнать чуть больше, то всегда можно воспользоваться [документацией по API `graphql-js`](http://graphql.org/graphql-js/graphql/#graphql).
+Му воспользуемся функцией `graphql`, которая экспортируется из `graphql-js`. В простейшем виде она принимает два аргумента и возвращает объект Promise. Первый аргумент — это объект схемы GraphQL. Второй аргумент — это строка, содержащая запрос GraphQL. Все примеры в этой главе расскажут вам, как написать этот запрос. Если же вы хотите узнать чуть больше, то всегда можно воспользоваться [документацией по API `graphql-js`](http://graphql.org/graphql-js/graphql/#graphql).
 
 ```js
 const { graphql } = require("graphql");
@@ -79,28 +52,17 @@ graphql(schema, query).then(result =>
 );
 ```
 
-Воспользуйтесь [копированием этого примера в сервис glitch](https://glitch.com/edit/#!/remix/pinapp-queries-mutations), 
-чтобы получить возможность сразу же запустить и проверить в действии код, приведённый в этой главе. 
-Это даст вам полную свободу над проектом. Вы можете модифицировать его по своему усмотрению, 
-запускать скрипты с помощью консоли и даже экспортировать его в github.
+Воспользуйтесь [копированием этого примера в сервис Glitch](https://glitch.com/edit/#!/remix/pinapp-queries-mutations), чтобы получить возможность сразу же запустить и посмотреть в действии код, показанный в этой главе. Это даст вам полную свободу над проектом. Вы можете модифицировать его по своему усмотрению, запускать скрипты с помощью консоли и даже экспортировать его в GitHub.
 
-После копирования этого проекта вы можете запустить любой из скриптов в папке `queries`.
-Далее откройте консоль, нажав «Logs», а затем «Console». И выполните `node query/1-query.js`, 
-чтобы просмотреть выходные данные первого скрипта.
+После копирования этого проекта вы можете запустить любой из скриптов в папке `queries`. Далее откройте консоль, нажав «Logs», а затем «Console», и выполните `node query/1-query.js` для просмотра выходных данных первого скрипта.
 
-Теперь у вас есть все необходимое, чтобы начать изучение синтаксиса GraphQL. 
-Давайте уже приступим к отправке основных запросов.
+Теперь у вас есть все необходимое, чтобы начать изучение синтаксиса GraphQL. Давайте уже приступим к отправке основных запросов.
 
 ## 1.2 Запрос
 
-Как мы уже говорили в начале этой главы, GraphQL предоставляет возможность запрашивать конкретные поля объектов. 
-Т.е. запрос определяет, какие именно поля будет иметь ответ GraphQL в формате JSON*.
-Синтаксис языка запросов очень похож на формат объектов в JSON, с перечиследнием ключей без их значений. 
-Например, если вы хотите получить список пользователей, 
-каждый из которых имеет поле электронной почты, вы можете написать следующий запрос:
+Как мы уже говорили в начале этой главы, GraphQL предоставляет возможность запрашивать конкретные поля объектов. Запрос определяет, какие именно поля будет иметь ответ GraphQL в формате JSON[^chapter1-json]. Синтаксис языка запросов очень похож на формат объектов в JSON с перечислением ключей без их значений. Например, если вы хотите получить список пользователей, каждый из которых имеет поле электронной почты, вы можете написать следующий запрос:
 
-> `*` GraphQL не накладывает никаких ограничений на формат ответов сервера, однако JSON 
-является самым популярным и довольно читаемым вариантом — Прим.пер.
+[^chapter1-json]: GraphQL не накладывает никаких ограничений на формат ответов сервера, однако JSON является самым популярным и довольно читаемым вариантом.
 
 ```graphql
 {
@@ -110,9 +72,7 @@ graphql(schema, query).then(result =>
 }
 ```
 
-Вы можете передать этот запрос вместе со схемой в функцию `graphql`.
-Помните, что именно второй аргумент, передаваемый в функцию `graphql` и является строкой запроса. 
-Давайте посмотрим пример кода.
+Вы можете передать этот запрос вместе со схемой в функцию `graphql`. Помните, что именно второй аргумент, передаваемый в функцию `graphql`, является строкой запроса. Давайте посмотрим пример скрипта.
 
 `queries/1-query.js`
 
@@ -134,10 +94,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-Запуск этого скрипта в консоли вернёт ответ, с корневым полем `"data"` в котором есть все поля, 
-которые вы указали в запросе. Внутри этого поля вы увидите структуру, которая точно соответствует запросу, 
-который мы отправили. В качестве значения поля `"data"` вы увидите ключ `"users"`, который в свою 
-очередь содержит массив объектов с ключом `"email"`.
+Запуск приведённого выше кода в консоли вернёт ответ с корневым ключом `"data"`, в котором есть все запрошенные в запросе поля. Внутри поля `"data"` вы увидите структуру, которая точно соответствует отправленному запросу: вы увидите ключ `"users"`, который в свою очередь содержит массив объектов с ключом `"email"`.
 
 ```bash
 $ node queries/1-query.js
@@ -155,11 +112,13 @@ $ node queries/1-query.js
 }
 ```
 
-## 1.3 Nested Fields
+## 1.3 Вложенные поля
 
-You can query nested fields using GraphQL. One of the great advantages of GraphQL over REST is fetching nested resources in a single query. You can ask for a resource, for example users, and a list of nested resources, for example pins, in a single query. In order to do that with REST, you would have to get users and pins in separate HTTP requests.
+Используя GraphQL можно запросить вложенные поля. Одно из больших преимуществ GraphQL по сравнению с REST — это выборка вложенных ресурсов в одном запросе. Вы можете запросить ресурс, например пользователей, а также список вложенных ресурсов, например, пинов[^pins], в одном запросе. Чтобы сделать это с помощью REST, вам потребуется запрашивать пользователей и пины в отдельных HTTP-запросах.
 
-Note that only fields with `Object` type can have nested fields. You can't ask for nested fields in other types, like `String`, `Int` or others.
+[^pins]: Под _пином_, как правило, подразумевается изображение, у которого необязательно может быть название, описание, ссылка (источник изображения). Название пришло из сервиса Pinterest, в котором пользователь может создавать пины. 
+
+Обратите внимание, что только поля с типом `Object` могут иметь вложенные поля. Вы не можете запрашивать вложенные поля из других типов, таких как `String`, `Int` и др.
 
 ```js
 const { graphql } = require("graphql");
@@ -182,7 +141,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-The above example shows how simple it is asking for nested resources. As you can imagine, running the previous example returns a JSON object with the exact keys that the query specifies. Try it out by running `node queries/2-fields.js` in your project's console.
+Приведенный выше пример показывает, насколько легко получить вложенные ресурсы. Как вы понимаете, выполнение предыдущего примера вернет JSON-объект с точно такими же ключами, которые были указаны в запросе. Убедитесь в этом сами, запустив команду `node query/2-fields.js` в консоли из-под директории проекта.
 
 ```bash
 $ node queries/2-fields.js
@@ -216,9 +175,9 @@ $ node queries/2-fields.js
 }
 ```
 
-## 1.4 Multiple fields
+## 1.4 Несколько полей
 
-GraphQL allows you to query for multiple fields in a single query. You saw in the previous example that you can query nested resources, well you can also query for totally unrelated resources in the same operation.
+GraphQL позволяет получить несколько полей в одном запросе. В предыдущем примере вы видели, что можно запросить вложенные ресурсы, но также возможно запросить совершенно не связанные с друг другом ресурсы в одной и той же операции.
 
 ```js
 const { graphql } = require("graphql");
@@ -241,7 +200,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-Now you are starting to see that GraphQL queries are really about asking for specific fields of objects. If you run `node queries/3-multiple-fields.js`, you will get an object with two keys, `users` and `pins`.
+Теперь вы понимаете, что GraphQL-запросы на самом деле представляют из себя получение конкретных полей объектов. Если вы выполните `node queries/3-multiple-fields.js`, то получите объект с двумя ключами: `users` и `pins`.
 
 ```bash
 $ node queries/3-multiple-fields.js
@@ -267,11 +226,11 @@ $ node queries/3-multiple-fields.js
 }
 ```
 
-## 1.5 Operation name
+## 1.5 Название операции
 
-Up until this point, you were using the short hand syntax of GraphQL queries, but there is also a longer syntax that gives you more options. The longer syntax includes the `query` keyword, and the operation name. Many times you will need to use this syntax because it allows you to specify variables, or use different operations like mutations or subscriptions, which we will cover in the rest of the book.
+До сих пор мы использовали сокращенный синтаксис запросов GraphQL, хотя вместе с ним есть более длинный синтаксис, который предоставляет больше возможностей. Более длинный синтаксис включает ключевое слово `query` и имя операции. Неоднократно, если не всегда, вы будете использовать именно такой синтаксис, поскольку он позволяет указывать переменные или использовать различные операции, такие как мутации или подписки, которые мы рассмотрим в оставшейся части книги.
 
-This is how a query with the operation name `GetUsers` looks like:
+Вот как выглядит запрос с именем операции `GetUsers`:
 
 ```js
 const { graphql } = require("graphql");
@@ -294,7 +253,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-You can run the previous query by entering `node queries/4-operation-name.js` in the console. Notice that it behaves exactly like the short hand version of the query.
+Вы можете запустить предыдущий запрос, набрав в консоли `node queries/4-operation-name.js`. Обратите внимание, что приведенная выше версия запроса работает аналогично, как и сокращенная версия.
 
 ```bash
 $ node queries/4-operation-name.js
@@ -328,11 +287,11 @@ $ node queries/4-operation-name.js
 }
 ```
 
-## 1.6 Arguments
+## 1.6 Аргументы
 
-All fields can have arguments, which you can use the same way you would use function arguments. You could think of GraphQL fields as functions, more so than properties. Picturing them as functions provides a clearer picture regarding what you can do by passing arguments to them.
+У всех полей могут быть аргументы, которые можно использовать аналогично, как и аргументы функции. Вы можете рассматривать GraphQL-поля как функции, а не свойства. Представление их в виде функций дает более четкое представление о том, что вы можете сделать с полями, передав им аргументы.
 
-Let's say for example that you want to query a pin by id by querying a field called `pinById`. You could ask for the pin with id 1 by passing a named argument to the query, like this:
+Давайте предположим, например, что вы хотите запросить пин по идентификатору, запросив поле `pinById`. Можно получить пин с идентификатором `1`, передав в запрос соответствующий именованный аргумент подобным образом:
 
 ```js
 const { graphql } = require("graphql");
@@ -352,7 +311,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-Running `node queries/5-arguments.js` in the console yields the following output.
+Выполнение `node queries/5-arguments.js` в консоли приведёт к следующему выводу:
 
 ```bash
 $ node queries/5-arguments.js
@@ -365,13 +324,13 @@ $ node queries/5-arguments.js
 }
 ```
 
-## 1.7 Aliases
+## 1.7 Псевдонимы
 
-What happens if you want to query the same field twice in a single query? Well you can achieve that using aliases. Aliases let you associate a name to a field, so that the response will have the alias you specified instead of the key name.
+Что произойдет, если вы захотите запросить одно и то же поле дважды в одном запросе? Ну... вы можете достичь этого с помощью псевдонимов. Псевдонимы позволяют связать имя с полем, так что в ответе будет указан псевдоним вместо имя ключа.
 
-Aliasing a field is as simple as prepending the field name with the desired alias and a colon (:).
+Псевдоним поля — это также просто, как и добавление имени поля с желаемым псевдонимом и двоеточием (:).
 
-Aliases are especially helpful when querying for the same field but with different arguments. The following query asks for `pinById` twice, aliasing the first field with `firstPin` and the second field with `secondPin`.
+Псевдонимы особенно полезны при запросе одного и того же поля, но с разными аргументами. Следующий запрос дважды запрашивает поле `pinById`, используя псевдонимы: первое поле будет иметь псевдоним `firstPin`, а второе поле — `secondPin`.
 
 ```js
 const { graphql } = require("graphql");
@@ -394,7 +353,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-The response contains the aliases instead of the field name. Verify this by running `node queries/6-aliases.js`.
+Как вы видите, ответ содержит псевдонимы вместо имени поля. Проверьте сами, выполнив команду `node queries/6-aliases.js`.
 
 ```bash
 $ node queries/6-aliases.js
@@ -410,15 +369,15 @@ $ node queries/6-aliases.js
 }
 ```
 
-## 1.8 Fragments
+## 1.8 Фрагменты
 
-GraphQL syntax provides a way to reuse a set of fields with the `fragment` keyword. This is a language designed for querying fields, so it seems natural to have a way to reuse fields in different parts of the query.
+Синтаксис GraphQL предоставляет возможность многократного использования набора полей с использованием ключевого поля `fragment`. Это язык, предназначенный для запросов полей, поэтому вполне естественно ожидать вариант для многократного использования полей в разных частях запроса.
 
-In order to reuse fields you have to first define a fragment and then place the fragment in different parts of the query.
+Для повторного использования поля, сначала нужно определить фрагмент, а затем поместить фрагмент в разные части запроса.
 
-Define fragments using the `fragment [fragmentName] on [Type] { field anotherField }` syntax. Use fragments by placing `...[fragmentName]` anywhere you would place a field.
+Определите фрагменты, используя следующий синтаксис: `fragment [fragmentName] on [Type] { field anotherField }`. Используйте фрагменты, поместив `...[fragmentName]` в то место запроса, где вы указали бы поле.
 
-An example is worth more than 1000 keywords. The following example defines a fragment called `pinFields`, and uses it twice in the query.
+Любой примере лучше всего продемонстрирует какую-либо возможность. В следующем примере определяется фрагмент с именем `pinFields`, а затем используется дважды в запросе.
 
 ```js
 const { graphql } = require("graphql");
@@ -447,7 +406,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-Run the previous query with `node queries/7-fragments.js`. Play with the defined fragment by changing the list of fields that you ask for, and see how that changes the output of the script.
+Выполните запрос выше с помощью команды `node queries/7-fragments.js`. Попробуйте поиграть с этим фрагментом, изменив список запрашиваемых полей, и посмотрите, как измениться вывод скрипта.
 
 ```bash
 $ node queries/7-fragments.js
@@ -489,15 +448,13 @@ $ node queries/7-fragments.js
 }
 ```
 
-## 1.9 Variables
+## 1.9 Переменные
 
-Just like fragments lets you reuse field sets, variables let you reuse queries. Using variables you can specify which parts of the query are configurable, so that you can use the query multiple times by changing the variable values. Using variables you can construct dynamic queries.
+Так же, как фрагменты позволяют вам повторно использовать наборы полей, переменные дают повторно использовать запросы. Используя переменные, можно указать, какие части запроса являются настраиваемыми, так что вы можете использовать запрос несколько раз, изменяя значения переменных. Используя переменные, можно создавать динамические запросы.
 
-You can add a list of variables names, along with their types, in the same place that you specify the `query` keyword.
+Давайте посмотрим, как вы можете добавить переменные в пример запроса пинов по идентификатору. Можно определить переменную с именем `$id`, указать ее тип `String` и пометить ее как обязательную, поставив восклицательный знак (`!`) после названия типа.
 
-Let's see how you could add variables to the example of querying pins by id. You could define a variable called `$id`, specify its type as `String` and mark it as required by putting an exclamation mark (!) after its type.
-
-The next snippet defines the `$id` variable in its query, and sends it along with the schema and a list of variables to `graphql`. This `graphql` function receives a list of variables as its fifth argument.
+Следующий фрагмент определяет переменную `$id` в своем запросе и отправляет ее вместе со схемой и списком переменных в `graphql`. Функция `graphql` получает список переменных в качестве пятого аргумента.
 
 ```js
 const { graphql } = require("graphql");
@@ -519,7 +476,7 @@ graphql(schema, query, undefined, undefined, {
 );
 ```
 
-The result of running `node queries/8-variables.js` is pretty straightforward.
+Результат выполнения `node query / 8-variables.js` довольно ясен.
 
 ```bash
 $ node queries/8-variables.js
@@ -532,15 +489,15 @@ $ node queries/8-variables.js
 }
 ```
 
-## 1.10 Directives
+## 1.10 Директивы
 
-Just as variables let you create dynamic queries by changing arguments, directives allow you to construct dynamic queries that modify the structure and shape of their result.
+По аналогии как переменные дают возможность создавать динамические запросы путем изменения аргументов, директивы позволяют конструировать динамические запросы, которые изменяют структуру и форму их результата.
 
-You can attach directives to fields or fragments. All directives start with an `@` symbol.
+Директивы возможно прикрепить к полям или фрагментам. Все директивы начинаются с символа `@`.
 
-GraphQL servers can expose any number of directives that they wish, but the GraphQL spec defined two mandatory directives, `@include(if: Boolean)` and `@skip(if: Boolean)`. The first includes a field only when `if` is true, and the second skips a field when `if` is true.
+GraphQL-серверы могут предоставлять любое количество директив, которое они пожелают, однако в спецификации GraphQL определены две обязательные директивы: `@include(if: Boolean)` и `@skip(if: Boolean)`. Первая директива включает поле только если `if` равно true, а вторая, напротив, пропускает поле, когда `if` равно true.
 
-The next example shows directives in action. It places an `@include` directive on the `pins` field, and parameterizes the value using a variable called `$withPins`.
+Следующий пример показывает директивы в действии. Директива `@include` помещается в поле `pins` и параметризует значение, используя переменную с именем `$withPins`.
 
 ```js
 const { graphql } = require("graphql");
@@ -565,7 +522,7 @@ graphql(schema, query, undefined, undefined, {
 );
 ```
 
-Go ahead and run the previous example with `node queries/9-directives.js`. Change `withPins` to false and see how the result's structure changes.
+Двигайтесь дальше, выполните предыдущий пример через команду `node queries/9-directives.js`. Измените `withPins` на false, что увидеть, как изменится структура результата.
 
 ```bash
 $ node queries/9-directives.js
@@ -599,11 +556,11 @@ $ node queries/9-directives.js
 }
 ```
 
-## 1.11 Default variables
+## 1.11 Переменные по умолчанию
 
-GraphQL syntax lets you define default values to variables. You can achieve this by adding an equals sign (=) after the variable's type.
+Синтаксис GraphQL даёт определять значения по умолчанию для переменных. Это возможно, если добавить знак равенства (=) после типа переменной.
 
-Let's see an example by adding a default parameter of `true` to the previous Directives example. A default variable allows you to call `graphql` in the example without sending `withPins` in the list of variables.
+Давайте рассмотрим пример, добавив параметр по умолчанию `true` к предыдущему примеру с директивами. Значение по умолчанию для переменной позволяет вызвать функцию `graphql` в примере, не указывая значение для `withPins` в аргументе списка переменных.
 
 ```js
 const { graphql } = require("graphql");
@@ -626,7 +583,7 @@ graphql(schema, query).then(result =>
 );
 ```
 
-Run `node queries/10-default-variables.js`. Notice that the output looks exactly the same as calling `graphql` with a `withPins` value of `true`.
+Выполните в консоли: `node queries/10-default-variables.js`. Обратите внимание, вывод выглядит точно так же, как и вызов `graphql` со значением `withPins`, равным `true`.
 
 ```bash
 $ node queries/10-default-variables.js
@@ -660,13 +617,13 @@ $ node queries/10-default-variables.js
 }
 ```
 
-## 1.12 Inline fragments
+## 1.12 Встроенные фрагменты
 
-Inline fragments provide a way to specify a list of fields inline. As opposed to regular fragments, which must be defined using the `fragment` keyword, inline fragments don't need to be defined anywhere.
+Встроенные фрагменты предусматривают способ указать список встроенных полей. В отличие от обычных фрагментов, которые должны быть определены с помощью ключевого слова `fragment`, встроенные фрагменты не нужно где-либо определять.
 
-These types of fragments are useful when querying fields with a `Union` or `Interface` type. These fields can return objects with varying fields, depending on the object's type. You can use fragments to indicate which fields to return, based on an object's type.
+Эти типы фрагментов полезны при запросе полей с типом `Union` или `Interface`. Эти поля могут возвращать объекты с различными полями, в зависимости от типа объекта. Вы можете использовать фрагменты, чтобы указать, какие поля возвращать, основываясь на типе объекта.
 
-A great use case for inline fragments is a search query, which can return objects of different types. The following snippet shows how you could use inline fragments to get a different set of fields from a `search` query. If the returned object is a `Person`, return its `email`, and if this object is a `Pin`, return its `title`.
+Отличный случай использования встроенных фрагментов — поисковый запрос, который может возвращать объекты разных типов. В следующем фрагменте показано, как можно использовать встроенные фрагменты, чтобы получить разный набор полей из запроса `search`. Если возвращаемый объект — это `Person`, значит нужно вернуть его `email`, а если этот объект — `Pin`, то вернуть его `title`.
 
 ```js
 const { graphql } = require("graphql");
@@ -693,7 +650,7 @@ graphql(schema, query, undefined, undefined, {
 );
 ```
 
-Run the previous example with `node queries/11-inline-fragments.js`.
+Запустите этот пример, используя `node queries/11-inline-fragments.js`.
 
 ```bash
 $ node queries/11-inline-fragments.js
@@ -711,15 +668,15 @@ $ node queries/11-inline-fragments.js
 }
 ```
 
-## 1.13 Meta fields
+## 1.13 Метаполя
 
-Queries can request meta fields, which are special fields that contain information about a schema.
+Запросы могут запрашивать метаполя, представляющие собой специальные поля, которые содержат информацию о схеме.
 
-GraphQL allows you to retrieve the type name of objects by requesting a meta field called `__typename`.
+GraphQL позволяет получать имена типов объектов, запрашивая метаполе с именем `__typename`.
 
-This meta field is useful in the same scenarios where inline fragments are handy, which is in queries that can return multiple field types, like `Union` or `Interface`.
+Данное метаполе полезно в тех же ситуациях, где удобны встроенные фрагменты, то есть в запросах, которые могут возвращать несколько типов полей, таких как `Union` или `Interface`.
 
-The following snippet adds a `__typename` field to the example `search` query from the inline fragments explanation.
+Следующий фрагмент кода добавляет поле `__typename` к примеру запроса `search` из объяснения встроенных фрагментов.
 
 ```js
 const { graphql } = require("graphql");
@@ -747,7 +704,7 @@ graphql(schema, query, undefined, undefined, {
 );
 ```
 
-Run the previous script by entering `node queries/12-meta-fields.js` into the console. You will see that the response contains a `__typename` field in each object.
+Запустите предыдущий скрипт, выполнив в командной строке `node queries/12-meta-fields.js`. Вы увидите, что ответ содержит поле `__typename` в каждом объекте.
 
 ```bash
 $ node queries/12-meta-fields.js
@@ -767,15 +724,15 @@ $ node queries/12-meta-fields.js
 }
 ```
 
-## 1.14 Mutations
+## 1.14 Мутации
 
-GraphQL syntax provides a way to create data with the `mutation` keyword. It works similarly to the `query` keyword. It supports variables, you can ask for specific fields in the response, and all the other features that we have talked about. As opposed to queries, mutations don't have shorthand forms, this means that they always start with the `mutation` keyword.
+Синтаксис GraphQL позволяет создавать данные с использованием ключевого слова `mutation`. Оно работает аналогично ключевому слову `query`. Поддерживаются переменные, поэтому возможно запросить конкретные поля в ответе, а также всё то, что мы разбирали ранее. В отличие от запросов, мутации не имеют сокращенных форм написания, так что, они всегда начинаются с ключевого слова `mutation`.
 
-Even though mutations signify data changes, this is merely a convention. There is nothing that enforces that servers actually change data inside mutations. Similarly, there is nothing enforcing that queries don't contain any data changes. This convention is similar to the REST conventions that recommend GET requests to not have any side effects, or POST requests to create resources. It is not enforced in any way, but you should follow in order to not send any unexpected surprises to your API consumers.
+Даже если мутации означают изменения данных, это всего лишь соглашение. Нет никакой гарантии, что серверы будут изменять данные внутри мутаций. Точно так же нельзя утверждать наверняка, что запросы содержат только изменения данных. Это соглашение похоже на соглашения из REST, предписывающие GET-запросам не иметь побочных эффектов, либо рекомендуют использовать POST-запросы для создания ресурсов. Данное соглашение не соблюдается тем или иным образом, однако вам следует придерживаться его, чтобы не преподносить неожиданные сюрпризы пользователям вашего API.
 
-Let's see how mutations work in practice by sending a mutation called `addPin`, exposed by the example schema we were using in this chapter.
+Давайте посмотрим, как мутации работают на практике, отправив мутацию с именем `addPin`, представленную на примере схемы, которую мы использовали в этой главе.
 
-You will notice that writing mutations is really similar to writing queries. The only differences are the initial keyword and the fact that it signifies a data change.
+Вы заметите, что написание мутаций действительно похоже на написание запросов. Единственное отличие заключается в разном ключевом слове и, конечно, то, это операция предполагает изменение данных.
 
 ```js
 const { graphql } = require("graphql");
@@ -804,7 +761,7 @@ graphql(schema, query, undefined, undefined, {
 );
 ```
 
-Run this mutation example by entering `node queries/13-mutations.js` in the console. Remember that our schema works with mocked data, it does not have a real implementation underneath, so don't expect any data changes caused by this mutation.
+Запустите этот пример мутации, набрав в консоли команду `node queries/13-mutations.js`. Помните, что наша схема работает с фиктивными данными, она не имеет реальной реализации, поэтому не ожидайте каких-либо изменений данных, вызванных данной мутацией.
 
 ```bash
 $ node queries/13-mutations.js
@@ -820,11 +777,11 @@ $ node queries/13-mutations.js
 }
 ```
 
-If you query the list of pins after your last mutation, you will notice that this last mutation did not generate any data. This happens because the queries in this chapter go against a mocked schema.
+Если вы запросите список пинов после последней мутации, вы заметите, что выполненная последняя мутация не создала никаких данных. Это происходит потому, что запросы в этой главе выполняются на имитированной схеме.
 
-## 1.15 Summary
+## 1.15 Резюме
 
-GraphQL makes frontend development easier by providing powerful querying capabilities. It makes it easy to fetch for multiple, nested resources in a single query. Fetching the minimal set of fields needed from a resource is also a built-in feature.
+GraphQL упрощает фронтенд-разработку, предоставляя мощные возможности запросов. Это облегчает получение нескольких вложенных ресурсов в одном запросе. Извлечение минимального набора полей из ресурса также является встроенной возможностью.
 
-In the next chapter, called Data Modeling, you will design from scratch the schema you used in this chapter. As opposed to this chapter's schema, the next one will be backed by an in-memory database, it will not have mocked values.
+В следующей главе, «Моделирование данных», вы с нуля разработаете схему, которую использовали в этой главе. По сравнению с используемой схемой текущей главы, в следующей главе будет использоваться база данных в оперативной памяти для хранения схемы, и у нее не будет фиктивных значений.
 
