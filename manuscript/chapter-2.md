@@ -1,41 +1,41 @@
 # 2. Моделирование данных
 
-В предыдущей главе вы узнали, как читать и записывать данные, отправляя запросы к схеме с использованием языка запросов GraphQL. В этой главе вы научитесь, как моделировать данные, лежащие в основе запросов, используя схемы и типы. Чтобы создать эту схему, вы будете использовать язык определения схемы (Schema Definition Language) GraphQL (также называемый SDL, чтобы не путать с LSD).
+В предыдущей главе вы узнали, как читать и записывать данные, отправляя запросы к схеме с использованием языка запросов GraphQL. В этой главе вы научитесь, как моделировать данные, лежащие в основе запросов, используя схемы и типы. Для создания такой схемы, вы будете использовать язык определения схемы (Schema Definition Language) GraphQL (также называемый SDL, чтобы не путать с LSD).
 
-В то время как предыдущая глава была посвящена тому, как клиенты взаимодействуют с серверами, используя GraphQL, в этой главе будет рассмотрен вопрос, как предоставить модель данных, которую могут использовать клиенты.
+В то время как предыдущая глава была посвящена взаимодействию клиентов с серверами, используя GraphQL, в этой главе будет рассказано, как представить модель данных, которую могут использовать клиенты.
 
-Помните клон Pinterest, о котором мы говорили во введении? Изучив концепции схем и типов GraphQL, вы разработаете модель данных в конце этой главы.
+Помните клон Pinterest, о котором шла речь во введении? Изучив концепции схем и типов GraphQL, к концу главы вы разработаете модель данных.
 
-## 2.1 Schema, types and resolvers
+## 2.1 Схема, типы и резолверы
 
-GraphQL servers expose their schema in order to let clients know which queries and mutations are available. To define what a schema looks like, you need to define the types of all fields. To define how a schema behaves, you need to define a function that the server will run when a client asks for a field, this function is called resolver. A schema needs both type definitions and resolvers.
+Серверы GraphQL предоставляют свою схему для того, чтобы клиенты знали, какие доступны запросы и мутации. Для определения того, как выглядит схема, вам нужно объявить типы всех полей. Чтобы определить, как ведет себя схема, вам нужно создать функцию, которую сервер будет запускать, когда клиент запрашивает поле, — такая функция называется резолвером. Схема нуждается как в определениях типов, так и в резолверах.
 
-![Types and resolvers](images/types-resolvers.png)
+![Типы и резолверы](images/types-resolvers.png)
 
-Because GraphQL is a specification implemented in many languages, it provides its own language to design schemas, called SDL. You write type definitions in SDL, but you can create resolvers in any language that implements the GraphQL specification. This book focuses on the Javascript GraphQL ecosystem, so you will write all resolvers in this language.
+Поскольку GraphQL — это спецификация, реализованная на многих языках программирования, она предоставляет собственный язык для разработки схем, называемый SDL. Вы пишете определения типов на SDL, хотя создавать резолверы можно на любом языке, который реализует спецификацию GraphQL. Эта книга посвящена Javascript-экосистеме GraphQL, поэтому вам предстоит все резолверы на данном языке.
 
-The schema you will create is more than just an example that illustrates how to write SDL. It is the initial step of building PinApp, the sample application of this book. It allows most of the features in the final app:
+Схема, которую вы создадите, — это нечто большее, чем просто пример, иллюстрирующий, как писать SDL-код. Это первый шаг к разработке PinApp, пример приложения данной книги. Создаваемая схема будет отражать большинство возможностей в готовом приложении:
 
-* Login with magic links
-* Allow authenticated users to add pins
-* Search pins and users
-* List pins
+* Авторизация с помощью магических ссылок
+* Возможность аутентифицированным  пользователям добавлять пины
+* Поиск по пинам и пользователям
+* Список пинов
 
-Make your own copy of this example with the following button:
+Создайте собственную копию этого примера с помощью следующей ссылки:
 
-[Remix schema example](https://glitch.com/edit/#!/remix/pinapp-schema)
+[Клонировать пример схемы](https://glitch.com/edit/#!/remix/pinapp-schema)
 
-> After remixing, closely follow the instructions in `README.md`. This project's README instructs you to configure environment variables in `.env`.
+> После клонирования внимательно следуйте инструкциям в `README.md`. Файл README этого проекта сообщает вам создать переменные окружения в специальном для этого файле `.env`.
 
-Note that this schema is not exposed over HTTP. It is accessible with scripts using `graphql-js`. The next chapter will show you how to add an HTTP layer to this schema, using Apollo Server.
+Имейте в виду, что эта схема не распространяется через протокол HTTP. Она доступна со скриптами, использующими `graphql-js`. Следующая глава покажет вам, как добавить HTTP-слой в эту схему с помощью Apollo Server.
 
-In the next section you will understand how to create schemas using a function called `makeExecutableSchema`.
+В следующем разделе вы поймете, как создавать схемы, используя функцию `makeExecutableSchema`.
 
-## 2.2 Schemas
+## 2.2 Схемы
 
-You create schemas by combining type definitions and resolvers. There is a handy package called [`graphql-tools`](https://github.com/apollographql/graphql-tools) that provides a function called `makeExecutableSchema`. The previous chapter contained a lot of `graphql(query, schema)` calls. All of those examples sent queries agains a schema generated with `makeExecutableSchema`.
+Создание схемы происходит путём сочетания определений типов и резолверов. Существует удобный пакет [`graphql-tools`](https://github.com/apollographql/graphql-tools), предоставляющий функцию `makeExecutableSchema`. Предыдущая глава содержала много вызовов `graphql(query, schema)`. Все существующие примеры отправляют запросы согласно схемы, сгенерированной с помощью функции `makeExecutableSchema`.
 
-Open the file called `schema.js` in the example project you just remixed to see how you can create a schema.
+Откройте файл `schema.js` в примере проекта, который вы только что склонировали, чтобы узнать, как можно создать схему.
 
 ```js
 const { makeExecutableSchema } = require("graphql-tools");
@@ -52,15 +52,15 @@ const schema = makeExecutableSchema({
 module.exports = schema;
 ```
 
-As you can see, this file created a schema with types from `schema.graphql` and resolvers from `resolvers.js`. The next two sections will teach you how to create these type definitions and resolvers.
+Как видите, этот файл создает схему с типами из файла `schema.graphql` и резолверами из файла `resolvers.js`. В следующих двух разделах вы научитесь, как создавать определения типов и резолверы.
 
-## 2.3 Type definitions
+## 2.3 Определения типов
 
-In this section you will learn how to write GraphQL types using SDL. A type is just a representation of an object in your schema. Objects, as in many other programming languages, can have many fields.
+В этом разделе вы научитесь тому, как писать типы GraphQL, используя SDL. Тип — это просто представление объекта в вашей схеме. Объекты, как и во многих других языках программирования, могут иметь много полей.
 
-> You can find all examples in this section in `schema.graphql`
+> Все примеры в этом разделе можно найти в файле `schema.graphql`
 
-This is how you define an object type:
+Определить тип объекта можно подобным образом:
 
 ```graphql
 type Pin {
@@ -72,9 +72,9 @@ type Pin {
 }
 ```
 
-As you can see, you can define the type of fields after the field name. In the case of `Pin`, all of its fields are of type `String`, and are required because they end with an exclamation mark (!).
+Как видно, можно определить тип полей после имени поля. В случае `Pin`, у всех его полей указан тип `String` и все они являются обязательными, поскольку заканчиваются восклицательным знаком (!).
 
-GraphQL defines two special object types, `Query` and `Mutation`. They are special because they define the entry points of a schema. Being the entry point of a schema means that GraphQL clients must start their queries with one or more of the fields from `Query`.
+GraphQL определяет два специальных типа объектов — `Query` и `Mutation`. Они особенные, потому что они определяют точки входа в схему. Быть точкой входа в схему означает, что клиенты GraphQL должны начинать свои запросы с одного или нескольких полей из `Query`.
 
 ```graphql
 type Query {
@@ -86,11 +86,11 @@ type Query {
 }
 ```
 
-As you may have noticed, object types can have arguments. Every field has an underlying function (called resolver) that runs before returning its value, so it makes sense to think of field arguments the same way we think of function arguments.
+Как вы, наверное, заметили, у типов объектов могут быть аргументы. Каждое поле имеет базовую функцию (называемую резолвером), которая выполняется перед возвратом собственного значения, поэтому имеет смысл рассматривать аргументы поля по аналогии с тем, как мы размышляем над аргументами функции.
 
-Another new element in the previous `Query` is the List type modifier. You can wrap fields in square brackets to specify them as lists.
+Еще один новый элемент в предыдущем `Query` — это модификатор типа List. Возможно заключить поля в квадратные скобки, чтобы указать их как списки.
 
-The GraphQL specification determines that all schemas must have a `Query` type, and they can optionally have a `Mutation` type. This is how PinApp's `Mutation` type looks like:
+Спецификация GraphQL определяет, что все схемы должны иметь тип `Query`, а также необязательно тип `Mutation`. Вот так выглядит тип `Mutation` в PinApp:
 
 ```graphql
 type Mutation {
@@ -100,9 +100,10 @@ type Mutation {
 }
 ```
 
-Notice that `addPin` has a `pin` argument of type `PinInput`, and the other two fields have arguments of `String` type. You can't pass arguments of type `Object` as arguments, you can only pass scalar types or `Input` types.
+Обратите внимание, что поле `addPin` имеет аргумент `pin` с указанным типом `PinInput`, а у двух остальных полей есть аргументы типа `String`. Вы не можете передавать аргументы типа `Object` в качестве аргументов, разрешено передавать только скалярные типы, а также типы `Input`.
 
-Scalar types can't have nested fields, they represent the leaves of a schema. These are the built-in scalar types in GraphQL:
+Скалярные типы не могут иметь вложенные поля, они представляют собой листья[^leaves] схемы. Это встроенные скалярные типы в GraphQL:
+[^leaves]: Элементы самого нижнего уровня в древовидном представлении иерархии
 
 * `Int`
 * `Float`
@@ -110,11 +111,11 @@ Scalar types can't have nested fields, they represent the leaves of a schema. Th
 * `Boolean`
 * `ID`
 
-Some GraphQL implementations allow you to define custom scalar types. This means that you could create custom scalars such as `Date` or `JSON`.
+Некоторые реализации GraphQL позволяют определять пользовательские скалярные типы. Это означает, что есть возможность создавать собственные скаляры, такие как `Date` или `JSON`.
 
-You can define a special kind of scalars using `enum` types. Enumerations are special scalars because they are restricted to a fixed set of values.
+Вы можете определить специальный вид скаляров, используя перечислимые типы (`enum`). Перечисления — специальные скалярные типы, потому что они ограничены фиксированным набором значений.
 
-This is how an enum looks like:
+Вот таким образом выглядит перечислимый тип:
 
 ```graphql
 enum PinStatus {
@@ -124,9 +125,9 @@ enum PinStatus {
 }
 ```
 
-Input types behave almost exactly like objects. They can have fields inside of them, but the difference is that those fields cannot have arguments and also cannot be of `Object` type.
+Типы `Input` работает почти так же, как объекты. Внутри них могут быть поля, но разница в том, что такие поля не могут иметь аргументов и также тип `Object`.
 
-This is how the custom `PinInput` type is defined:
+Вот как определяется нестандартный тип `PinInput`:
 
 ```graphql
 input PinInput {
@@ -136,9 +137,9 @@ input PinInput {
 }
 ```
 
-GraphQL allows you to define `Interface` and `Union` types. They are useful when you want to return an object which can be of several different types.
+GraphQL позволяет также определять типы `Interface` и `Union`. Они полезны, когда вам нужно вернуть объект, который может состоять из нескольких разных типов.
 
-You can use interfaces when you have different types which share fields between them. A common use case would be representing a `User` type.
+Можно воспользоваться интерфейсами, когда есть разные типы, имеющие общие поля между собой. Типичный случай использования будет представлять тип `User`.
 
 ```graphql
 interface Person {
@@ -160,7 +161,7 @@ type Admin implements Person {
 }
 ```
 
-When you want to create a type that represents different types with no shared fields between them, you must use a `Union` type. A typical operation that returns this type is a search:
+В случае, если вам нужен тип, который представляет разные типы без общих полей между собой, в вашем распоряжении есть тип `Union`. Типичная операция, которая возвращает такой тип, — это поиск:
 
 ```graphql
 union SearchResult = User | Admin | Pin
@@ -171,7 +172,7 @@ type Query {
 }
 ```
 
-This is what the complete version of `schema.graphql` looks like:
+Вот как выглядит полная версия `schema.graphql`:
 
 ```graphql
 type Pin {
@@ -223,17 +224,17 @@ type Mutation {
 }
 ```
 
-As you learned in the previous section, a schema is comprised of type definitions and resolvers. Now that you know how type definitions look like, it's time to learn about resolvers.
+Как вы узнали из предыдущего раздела, схема состоит из определений типов и резолверов. И поскольку сейчас, когда вы знаете, как выглядят определения типов, пришло время узнать про резолверы.
 
-## 2.4 Resolvers
+## 2.4 Резолверы
 
-Resolvers are the functions that run every time a query requests a field. When a GraphQL implementation receives a query, it runs the resolver for each field. If the resolver returns an `Object` field, then GraphQL runs that field's resolver function. When all resolvers return scalars, the chain ends and the query receives its final JSON result.
+Резолверы — это функции, которые запускаются каждый раз, когда запрос запрашивает поле. Когда реализация GraphQL получает запрос, она выполняет резолвер для каждого поля. Если резолвер возвращает поле типа `Object`, то GraphQL запускает резолвер-функцию этого поля. Когда все резолверы возвращают скалярные значения, цепочка замыкается, и запрос получает готовый JSON-результат.
 
-Since GraphQL is not tied to any database technology, it leaves resolver implementation entirely up to you. All functions in `resolvers.js` use a simple JS object that serves as a memory database, but in the next chapter you will learn how to migrate to a Postgres database.
+Поскольку GraphQL не привязан к какой-либо технологии баз данных, поэтому реализация резолвера полностью зависит от вас. Все функции в файле `resolvers.js` используют обычный JS-объект, служащий базой данных в оперативной памяти, однако уже в следующей главе вы узнаете, как выполнить миграцию в базу данных Postgres.
 
-You can organize resolvers in any way you want, depending on your needs. The examples in this book strive to keep resolver functions simple, and also separating database access with business logic. This is a simple case of applying the good old [Separation of Concerns](https://en.wikipedia.org/wiki/Separation_of_concerns) pattern.
+Вы можете организовать резолверы любым способом, в зависимости от ваших потребностей. Примеры этой книги стремятся держать резолвер-функции простыми, а также разделить доступ к базе данных с помощью бизнес-логики. Это простой случай применения старого доброго принципа [разделения ответственности](https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8).
 
-This is what `resolvers.js` looks like:
+Давайте посмотрим, как выглядит `resolvers.js`:
 
 ```js
 const {
@@ -323,13 +324,13 @@ const resolvers = {
 module.exports = resolvers;
 ```
 
-In this case, not all fields of `Query` and `Mutation` have a corresponding resolver. When a field does not have a resolver, it will resolve as `null`. Of course this is just for demonstration purposes. Your API clients would not be very happy with queries that always return null.
+В этом случае не все поля `Query` и `Mutation` имеют соответствующий резолвер. Если у поля нет резовлера, оно будет иметь значение `null`. Конечно, это только для демонстрационных целей. Ваши клиенты API не будут очень довольны запросами, которые всегда возвращают неопределённое значение.
 
-You can see that most of the logic in the fields of `Query` and `Mutations` come from the functions in `business-logic.js`. The function bodies are mostly data access and calls to methods from the business logic module.
+Можно заметить, что большая часть логики в полях `Query` и `Mutations` состоит из функций, определенных в файле `business-logic.js`. Содержимое функций — чаще всего доступ к данным и вызовы методов из модуля бизнес-логики.
 
-Some of the types in `resolvers.js` have methods named `__resolveType`. This is a method that `makeExecutableSchema` from `graphql-tools` uses. It determines the type of objects which are of type `Union` or `Interface`.
+Некоторые из типов в файле `resolvers.js` имеют методы `__resolveType`. Это метод, который использует `makeExecutableSchema` из `graphql-tools`. Он определяет тип объектов типа, которые имеют `Union` или `Interface`.
 
-You can try this example schema by opening your remixed example's console and run `node queries.js`. This script simulates a user who first creates an authentication token, and sends it in order to add a new pin.
+Вы можете попробовать схему этого примера, если откроете консоль склонированного примера и запустив в ней `node queries.js`. Этот скрипт имитирует пользователя, который сначала создает токен аутентификации и отправляет его, чтобы можно добавить новый пин.
 
 ```bash
 $ node queries
@@ -348,11 +349,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 }
 ```
 
-Feel free to learn by modifying the different resolver functions and seeing how that changes the final result. You can also create different queries, now that you know what queries and mutations your schema exposes.
+Не бойтесь экспериментировать, изменяя различные резолвер-функции и наблюдая за тем, как изменяется конечный результат. Вы также можете создавать различные запросы, теперь, когда вы уже знаете, какие запросы и мутации предоставляет ваша схема.
 
-## 2.5 Summary
+## 2.5 Резюме
 
-You learned how to create GraphQL schemas. You wrote type definitions using SDL, and resolvers using Javascript. The schema you created in this chapter is accessible by scripts using `graphql-js`.
+Вы узнали, как создавать GraphQL-схемы. Вы написали определения типов с использованием SDL, а также резолверы, используя Javascript. Схема, созданная в рамках этой главы, доступна скриптами, использующими `graphql-js`.
 
-The next chapter will teach you how to create GraphQL HTTP APIs. You will add the different layers that make up a GraphQL server on top of the GraphQL schema from this chapter. This API will have several additional layers, like HTTP, database and authentication.
+В следующей главе вы узнаете, как создавать HTTP API с помощью GraphQL. Вы добавите различные слои, составляющие сервер GraphQL, поверх схемы GraphQL. Этот API будет иметь несколько дополнительных уровней, включая HTTP, базу данных и аутентификацию.
 
