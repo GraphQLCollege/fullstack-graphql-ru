@@ -1,24 +1,24 @@
-# 3. GraphQL APIs
+# 3. API-интерфейсы GraphQL
 
-The most common way of exposing a GraphQL schema is with an HTTP server. Building GraphQL APIs is much more than just designing schemas. This chapter will teach you how to create robust, layered GraphQL APIs.
+HTTP-сервер — наиболее распространённый способ предоставить схему GraphQL. Создание API-интерфейсов GraphQL — это гораздо больше, чем просто проектирование схем. В этой главе вы узнаете, как создавать надежные, многоуровневые API-интерфейсы GraphQL.
 
-![Server](images/server.png)
+![Сервер](images/server.png)
 
-You will learn how to expose GraphQL schemas using Apollo Server. How to connect your resolvers to a database. You will add email based authentication to your API. Finally you will learn how to organize your source code based on features.
+Вы узнаете, как предоставлять GraphQL-схемы с помощью Apollo Server. Как подключить ваши резолверы к базе данных. Вы добавите аутентификацию по электронной почте в собственный API. Наконец, вы научитесь, как организовать исходный код по функциональным возможностям.
 
-![Server layers](images/server-layers.png)
+![Слои сервера](images/server-layers.png)
 
-All stages in this chapter have a corresponding project, which you can remix to learn by practice.
+Все этапы этой главы имеют соответствующий проект, который можно склонировать, чтобы попробовать на практике.
 
-Let's start by learning how to create an API using Apollo Server.
+Давайте начнем с изучения того, как создать API, используя Apollo Server.
 
-## 3.1 Server
+## 3.1 Сервер
 
-Apollo Server is an open source, spec-compliant GraphQL server. It is a production-ready, easy to setup way of exposing GraphQL schemas, so HTTP clients can consume them.
+Apollo Server — это сервер с открытым исходном кодом, совместимый со спецификацией GraphQL. Это готовый к работе в продакшене, простой в настройке способ представления GraphQL-схем, так чтобы HTTP-клиенты могли их использовать.
 
 ![HTTP](images/http.png)
 
-You already created a schema using `graphql-tools` in the previous chapter, so exposing it with Apollo Server is really straightforward.
+Вы уже создали схему с использованием `graphql-tools` в предыдущей главе, поэтому публично представить её с помощью Apollo Server не составляет никакого труда.
 
 ```js
 const { ApolloServer } = require("apollo-server");
@@ -32,39 +32,39 @@ server.listen().then(({ url }) => {
 });
 ```
 
-That's really it! With just a call to `server.listen()` you have a live GraphQL API. Remix the following example project to create your own copy.
+Действительно просто! Достаточно вызова функции `server.listen()` и у вас есть работающий API для GraphQL. Склонируйте следующий пример проекта, чтобы у вас была собственная копия проекта.
 
-[Remix server example](https://glitch.com/edit/#!/remix/pinapp-server)
+[Клонировать пример сервера](https://glitch.com/edit/#!/remix/pinapp-server)
 
-Click the Show button, on the top left of the screen, to open a batteries included GraphQL client called [GraphQL Playground](https://github.com/prismagraphql/graphql-playground). It is more than just a GraphQL client, it almost feels like an IDE. It has query autocomplete, it has GraphQL schema documentation and it stores all your queries so you can reuse them later.
+Нажмите кнопку «Show» в левом верхнем углу экрана для открытия включенного в комплект GraphQL-клиента — [GraphQL Playground](https://github.com/prismagraphql/graphql-playground). Это больше, чем просто клиент GraphQL, скорее что-то вроде IDE. У этого инструмента есть автозаполнение запроса, документация GraphQL-схемы, а также хранение всех выполненных запросов, что позволяет использовать в будущем.
 
 ![GraphQL Playground](images/graphql-playground.png)
 
-Now that you have deployed your GraphQL API, it's time to add persistence using a database.
+Теперь, когда вы развернули собственный API-сервер GraphQL, пришло время добавить сохранение данных, используя базу данных.
 
-## 3.2 Database
+## 3.2 База данных
 
-GraphQL APIs can be backed up by any data source. They can use SQL databases, NoSQL, in-memory databases or even use HTTP endpoints.
+API-интерфейсы GraphQL могут быть работать с любым источником данных. Они могут использовать базы данных SQL, NoSQL, базы данных в оперативной памяти или даже использовать конечные точки HTTP.
 
-![Database](images/database.png)
+![База данных](images/database.png)
 
-In this chapter you will connect PinApp to a SQLite database using a database connector called [Knex](http://knexjs.org). Knex is a SQL query builder that can communicate with many SQL databases, like SQLite3, MySQL, Postgres and more.
+В этой главе вы подключите PinApp к базе данных SQLite, используя коннектор базы данных [Knex](http://knexjs.org). Knex — это построитель SQL-запросов, который может взаимодействовать со многими базами данных SQL, такими как SQLite3, MySQL, Postgres и др.
 
-Remix the current iteration of PinApp so you can follow along the contents of this section with your own copy of the project.
+Склонируйте текущую итерацию приложения PinApp, чтобы вы могли следовать по тексту этого раздела, работая с собственной копией проекта.
 
-[Remix database example](https://glitch.com/edit/#!/remix/pinapp-database)
+[Клонировать пример базы данных](https://glitch.com/edit/#!/remix/pinapp-database)
 
-> Remember to follow the getting started instructions on the project's README
+> Не забывайте следовать инструкциям по началу работы в файле README проекта
 
-Since all database related interactions happen in `resolvers.js`, let's start with the contents of that file.
+Поскольку все взаимодействия с базами данных происходят в файле `resolvers.js`, давайте начнем с этого файла.
 
-Retrieve a set of records using `select()`. For example this is how to get the list of pins.
+Получить набор записей с помощью `select()`. Например, получить список пинов можно следующим образом:
 
 ```js
 pins: () => database("pins").select(),
 ```
 
-You can chain together Knex functions. For example you can filter results from a `select()` by chaining its call with the `where()` function.
+Вы можете объединить в цепочку вызовов функции Knex. Например, можно отфильтровать результаты из `select()`, добавив его вызов с функцией `where()`.
 
 ```js
 search: (_, { text }) => {
@@ -79,7 +79,7 @@ search: (_, { text }) => {
 };
 ```
 
-Another useful function that knex provides is `insert()`. It allows you to create objects in your database. This is how the `addPin` mutation looks like using `insert`.
+Еще одна полезная функция, которую предоставляет Knex, — это `insert()`. Она позволит создавать объекты в базе данных. Вот так выглядит мутация `addPin` при использовании `insert`.
 
 ```js
 addPin: async (_, { pin }, { token }) => {
@@ -90,7 +90,7 @@ addPin: async (_, { pin }, { token }) => {
 },
 ```
 
-The file called `database.js` creates an instance of knex and exports it as a module. It is a simple file that creates a knex instance with configuration values from a file called `knexfile.js`.
+Файл `database.js` создает экземпляр Knex и экспортирует в качестве модуля. Это простой файл, который создает экземпляр Knex с конфигурационными значениями из файла с именем `knexfile.js`.
 
 ```js
 const database = require("knex")(require("./knexfile"));
@@ -98,7 +98,7 @@ const database = require("knex")(require("./knexfile"));
 module.exports = database;
 ```
 
-Knex provides a CLI which provides several utilities for creating migrations, seeding databases, and more. It reads configuration from `knexfile.js`. PinApp's configuration file looks like this:
+У Knex имеется интерфейс командной строки, предоставляющий несколько утилит для создания миграций, заполнения данными баз данных и многое другое. Утилита CLI считывает конфигурацию из `knexfile.js`. Файл конфигурации PinApp выглядит так:
 
 ```js
 module.exports = {
@@ -109,11 +109,11 @@ module.exports = {
 };
 ```
 
-> [Glitch](https://glitch.com) allows you to persist data inside the `.data` folder. This is why `database.sqlite` is located in that folder.
+> [Glitch](https://glitch.com) позволяет сохранять данные в директории `.data`. Именно по этой причине файл `database.sqlite` находится в этой директории.
 
-The final step you need in order to use a SQL file is to generate your database schema. Knex allows you to generate migration files using its CLI.
+Последний шаг, необходимый для использования SQL-файла, — создание схемы базы данных. Knex может генерировать файлы миграции, используя собственный инструмент командной строки.
 
-Running `npx knex migrate:make create_users_table` creates a file called `[date]_create_users_table.js` inside the `.migrations` folder. This file exports two methods, `up` and `down`. These files are placeholders, which you need to fill in with your specific needs. In this case, the user table needs to have two fields, `id` and `email`. Both will have type `string`. The `id` field will be a primary key.
+Выполнение `npx knex migrate:make create_users_table` создаст файл с именем `[date]_create_users_table.js` в директории `.migrations`. Этот файл экспортирует два метода — `up` и `down`. Эти методы являются своего рода заполнителями, которые необходимо заполнить согласно ваших конкретным потребностям. В данном случае таблица пользователей будет иметь два поля: `id` и `email`. У обоих полей указан тип `string`, а поле `id` задано как первичный ключ.
 
 ```js
 exports.up = function(knex) {
@@ -128,7 +128,7 @@ exports.down = function(knex) {
 };
 ```
 
-There is another migration in the project you remixed, called `[date]_create_pins_migration`. It defines five `string` fields: `id`, `title`, `link`, `image` and `pin_id`.
+В склонированном проекте есть еще одна миграция — `[date]_create_pins_migration`. Эта миграция определяет пять строковых (`string`) полей: `id`, `title`, `link`, `image` и `pin_id`.
 
 ```js
 exports.up = function(knex) {
@@ -151,25 +151,25 @@ exports.down = function(knex) {
 };
 ```
 
-Running `npm run setup-db` will apply all database migrations. This script is defined in the `scripts` key of `package.json`:
+Выполните `npm run setup-db` для применения всех миграций базы данных. Этот скрипт определен в ключе `scripts` файла `package.json`:
 
 ```json
 "setup-db": "knex migrate:latest"`
 ```
 
-Teaching SQL is outside of the scope of this book, it needs a book on its own if you want to properly learn it. Knex does a great job at interacting with SQL databases for Javascript users, and it has great [documentation](http://knexjs.org). Refer to it if you want to learn more about it.
+Изучение SQL выходит за рамки книги: если вы хотите правильно изучить этот язык, лучше всего прочитать соответствующую книгу. Построитель запросов Knex отлично работает с базами данных SQL, а еще у него есть отличная [документация](http://knexjs.org). Обратитесь к ней, если вы хотите узнать больше про данный инструмент.
 
-## 3.3 Authentication
+## 3.3 Аутентификация
 
-A common question when building GraphQL APIs is "Where to put authentication and authorization?". Should it be in the GraphQL layer? Database layer? Business logic? Even though the answer depends on the context of what API you are building, a common way to solve this problem is to put authentication and authorization in the business layer. Putting auth related code in the business layer is [Facebook's approach](https://dev-blog.apollodata.com/graphql-at-facebook-by-dan-schafer-38d65ef075af).
+Один из самых часто задаваемых вопросов при создании API-интерфейсов с использованием GraphQL: «Куда поместить аутентификацию и авторизацию?». Это должно быть в слое GraphQL? Или на уровне базы данных? А может быть в бизнес-логики? Несмотря на то, что ответ зависит от контекста того, какой API вы создаете, распространенный способ решения этой проблемы — поместить аутентификацию и авторизацию на бизнес-уровне. Размещение кода, связанного с аутентификацией, на бизнес-уровне — это [подход Facebook](https://dev-blog.apollodata.com/graphql-at-facebook-by-dan-schafer-38d65ef075af).
 
-![Business Logic](images/business-logic.png)
+![Бизнес-логика](images/business-logic.png)
 
-You can implement auth in several ways, that is entirely up to your needs. This section will teach you how to add email based authentication to PinApp.
+Вы можете реализовать аутентификацию несколькими способами, что полностью соответствует вашим потребностям. Этот раздел покажет, как добавить аутентификацию по электронной почте в PinApp.
 
-Email based authentication consists of providing an email input to your users. Once they submit their email, you send them an authentication token inside a link to your app. If they enter your app using a valid token, you can trust this user. Once they enter your site with a valid token, you exchange that temporary token with a token with a longer expiration date.
+Аутентификация на основе электронной почты состоит из поля для ввода электронной почты. Как только пользователи укажут электронную почту, им придёт ссылка на приложение, в которой будет содержаться аутентификационный временный токен. Если пользователи перейдут в приложение с использованием действительного токена, то значит такому пользователю можно доверять (предполагаем, что почта пользователя подтверждена). А далее действительный токен будет заменен на токен аутентификации с более продолжительным сроком действия.
 
-The biggest advantage of this authentication system, as opposed to good old password-based authentication, is that you don't need to deal with passwords at all. Deciding not to store passwords means you don't have to take extreme security measures to keep them safe. It also means that your users don't have to deal with yet another site that asks them to create a new password.
+Самое большое преимущество подобной системы аутентификации, в отличие от старой доброй аутентификации по паролю, заключается в том, что вам вообще не нужно заниматься паролями. То, что мы не храним пароли также означает, что не требуется принимать крайних мер безопасности для их защиты. Еще это значит, что вашим пользователям не нужно заходить на очередной сайт, который просит их создать новый пароль.
 
 ```gherkin
 Feature: Email based authentication
@@ -187,7 +187,7 @@ Feature: Email based authentication
     Then he/she should see an email confirmation message
 ```
 
-Speaking of GraphQL terms, both of these actions are mapped onto mutations in their corresponding GraphQL schema, called `sendShortLivedToken` and `createLongLivedToken`. The first action receives an email as argument, which is of type `String`. The second action receives a token and returns the new token.
+Говоря в терминах GraphQL, оба эти действия (сценария) отражаются на мутациях в соответствующей GraphQL-схеме — `sendShortLivedToken` и `createLongLivedToken`. Первое действие получает в качестве аргумента электронное письмо типа `String`. Второе действие получает действительный токен, а возвращает новый токен.
 
 ```graphql
 type Mutation {
@@ -197,13 +197,13 @@ type Mutation {
 }
 ```
 
-Remix this project so you can follow the implementation of email based auth.
+Склонируйте этот проект для того, чтобы следить за ходом внедрения аутентификации по электронной почте.
 
-[Remix email authentication example](https://glitch.com/edit/#!/remix/pinapp-email-authentication)
+[Склонировать пример аутентификации по электронной почте](https://glitch.com/edit/#!/remix/pinapp-email-authentication)
 
-Now let's analyze how the email-related resolvers look like.
+Теперь давайте проанализируем, как выглядят резолверы, связанные с электронной почтой.
 
-The resolver for `sendShortLivedToken` should check if the user that corresponds to the email exists. If it doesn't exist, then it should insert it into the database. After this, it should create a token with a short expiration time, and send it to the user's email.
+Резолвер `sendShortLivedToken` должен проверить, существует ли пользователь, соответствующий электронной почте. Если он не существует, он должен вставить его в базу данных. После этого он должен создать токен с небольшим сроком действия и отправить его на электронную почту пользователя.
 
 ```js
 sendShortLivedToken: async (_, { email }) => {
@@ -222,9 +222,9 @@ sendShortLivedToken: async (_, { email }) => {
 };
 ```
 
-This resolver uses two functions from `business-logic.js`, `createShortLivedToken` and `sendShortLivedToken`.
+Этот резолвер использует две функции из файла `business-logic.js` — `createShortLivedToken` и `sendShortLivedToken`.
 
-The first one creates a token using the `jsonwebtoken` NPM package's [`sign`](https://github.com/auth0/node-jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback) function. This token will have an expiration time of five minutes.
+Первый создает токен, используя функцию `jsonwebtoken` из NPM-пакета [`sign`](https://github.com/auth0/node-jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback). У этого токена срок действия ограничен пятью минутами.
 
 ```js
 const createShortLivedToken = ({ email, id }) => {
@@ -238,7 +238,7 @@ const createShortLivedToken = ({ email, id }) => {
 };
 ```
 
-The second function, `sendShortLivedToken`, uses a function defined in `email.js` called `sendMail`.
+Вторая функция `sendShortLivedToken` использует функцию, определенную в файле `email.js`, под названием `sendMail`.
 
 ```js
 const sendShortLivedToken = (email, token) => {
@@ -254,7 +254,7 @@ const sendShortLivedToken = (email, token) => {
 };
 ```
 
-To send mails, you will use the `nodemailer` package. This library allows you to send emails through an SMTP server. The easiest way to create an email server for development purposes is with [Ethereal](https://ethereal.email/messages). This is a fake email service developed by the creators of Nodemailer, and it is a super easy way to create dev SMTP services. Of course, if you want to send actual emails, you should use a real SMTP service. [Sendgrid](https://sendgrid.com/) has a great free plan.
+Для отправки почты воспользуемся пакетом `nodemailer`. Эта библиотека позволяет отправлять электронные письма через SMTP-сервер. Самый простой способ создать почтовый сервер для разработки — [Ethereal](https://ethereal.email/messages. Это фиктивный почтовый сервис, разработанный создателями Nodemailer, является очень простым способом создания SMTP-службы для разработки. Разумеется, если вы хотите отправлять реальные электронные письма, вам следует использовать реальный сервис SMTP. [Sendgrid](https://sendgrid.com/) предлагает отличный бесплатный план.
 
 ```js
 const nodemailer = require("nodemailer");
@@ -289,7 +289,7 @@ function sendMail({ from, to, subject, text, html }) {
 module.exports = sendMail;
 ```
 
-The implementation of `createLongLivedToken` is much simpler than `sendShortLivedToken`. It uses a function from `business-logic.js` that verifies the token it receives as argument. If that token is valid, it creates a token with an expiration date of thirty days.
+Реализация `createLongLivedToken` намного проще, чем `sendShortLivedToken`. Первый резолвер использует функцию из файла `business-logic.js`, проверяющая токен, переданный в качестве аргумента. Если токен действителен, функция создает токен с окончанием срока действия, равный тридцать дней.
 
 ```js
 const createLongLivedToken = token => {
@@ -311,27 +311,27 @@ const createLongLivedToken = token => {
 };
 ```
 
-Go ahead and configure your remixed project with your Ethereal account. Once you have setup everything, hop into GraphQL Playground by clicking the "Show" button and authenticate using your email (or any email actually, Ethereal intercepts all of them :D).
+Двигайтесь дальше и сконфигурируйте склонированный проект в соответствии с вашей учетной записью Ethereal. Как только всё будет настроено, зайдите в GraphQL Playground, нажав кнопку «Show», и попробуйте авторизоваться, используя собственную электронную почту (или любую другую, так как Ethereal перехватывает все отправленные письма :D).
 
-## 3.4 File organization
+## 3.4 Организация файлов
 
-This section will teach you how to use `graphql-import` to organize Node.js GraphQL APIs by features. GraphQL import allows you to import and export type definitions in GraphQL SDL.
+В этом разделе вы узнаете, как использовать `graphql-import` для организации API-интерфейсов Node.js GraphQL по функциональным возможностям. Импорт GraphQL позволяет импортировать и экспортировать определения типов в GraphQL SDL.
 
-Up to this point, all files in the sample repository are organized by role, but this approach does not scale well for large projects. Right now, resolvers are in `resolvers.js`, type definitions are in `schema.graphql` and all business logic is in `business-logic.js`. As the projects grows bigger and bigger, this three files will end up becoming too large and unmanageable.
+На текущий момент все файлы в образце репозитория сгруппированы по ролям, но подобный не очень хорошо подходит для больших проектов. Сейчас все резолверы определены в файле `resolvers.js`, определения типов — в файле `schema.graphql`, а вся бизнес-логика — в файле b`business-logic.js`. По мере того, как проекты становятся все больше и больше, эти три файла станут слишком большими и неуправляемыми.
 
-The project's current file structure looks like this:
+Текущая структура файла проекта выглядит таким образом:
 
-![Current file structure](images/current-file-structure.png)
+![Текущая файловая структура](images/current-file-structure.png)
 
-You are going to split `schema.graphql`, `resolvers.js` and `business-logic.js` into three features: `authentication`, `pins` and `search`. The final directory structure will be the following:
+Вы собираетесь разделить `schema.graphql`, `resolvers.js` и `business-logic.js` на три функциональные возможности: `authentication`, `pins` и `search`. Окончательная структура каталогов будет такой, как показано ниже:
 
-![Final file structure](images/final-file-structure.png)
+![Окончательная файловая структура](images/final-file-structure.png)
 
-Remix the project if you want to see how the final version looks like.
+Склонируйте проект, если хотите посмотреть на окончательную версию.
 
-[Remix file organization example](https://glitch.com/edit/#!/remix/pinapp-files)
+[Клонировать пример организации файлов](https://glitch.com/edit/#!/remix/pinapp-files)
 
-The main entry point of the GraphQL schema will still be `schema.graphql`. The difference is that it will not contain any type definitions, it will import all types from the `schema.graphql` of every feature folder. The main schema will import the rest of the schemas using the `import` statement that `graphql-import` provides. Its syntax is `# import * from "module-name.graphql"`.
+Основной точкой входа схемы GraphQL по-прежнему будет файл `schema.graphql`. Разница в том, что в нем не будут содержаться какие-либо определения типов, а вместо этого импортировать все типы из файла `schema.graphql` в каждой директории функциональной возможности. Основная схема будет импортировать остальные схемы, используя оператор `import`, предоставленный `graphql-import`. Его синтаксис: `# import * from "module-name.graphql"`.
 
 ```graphql
 # import * from "authentication/schema.graphql"
@@ -339,7 +339,7 @@ The main entry point of the GraphQL schema will still be `schema.graphql`. The d
 # import * from "search/schema.graphql"
 ```
 
-This way of importing GraphQL SDL is possible because `schema.js` loads `schema.graphql` with the following snippet:
+Такой способ импорта GraphQL SDL возможен, поскольку файл `schema.js` загружает `schema.graphql` следующим фрагментом кода:
 
 ```js
 const { importSchema } = require("graphql-import");
@@ -348,7 +348,7 @@ const typeDefs = importSchema("schema.graphql");
 // ...
 ```
 
-Similarly to the schema, the main entry point for all resolvers will remain the same. It will still be `resolvers.js`. NodeJS already provides a way to import and export files using `require`, so you don't need any additional library. Even though this file does not need any additional library to import modules, it uses a library to merge the resolvers it imports. You could use pure Javascript to achieve this, but `lodash.merge` is a nice way to merge many Javascript objects.
+Подобное схеме, главная точка входа для всех резолверов останется прежней. Это по-прежнему будет `resolvers.js`. NodeJS уже предоставляет способ импорта и экспорта файлов с помощью `require`, поэтому вам не потребуется использовать дополнительную библиотеку. Даже если этот файл не нуждается в дополнительной библиотеке для импорта модулей, он использует библиотеку для объединения импортируемых резолверов. Можно писать на чистом Javascript-коде, чтобы достичь аналогичного результата, однако `lodash.merge` — это отличный способ объединить множества Javascript-объектов.
 
 ```js
 const merge = require("lodash.merge");
@@ -366,13 +366,13 @@ const resolvers = merge(
 module.exports = resolvers;
 ```
 
-To finish the file structure changes, split `business-logic.js`, `resolvers.js` and `schema.graphql`. Split `business-logic.js` into `authentication/index.js` and `pins/index.js`. Split `resolvers.js` into `authentication/resolvers.js`, `pins/resolvers.js` and `search/resolvers.js`. Finally split `schema.graphql` into the three new folders.
+В завершение изменения файловой структуры, разделите `business-logic.js`, `resolvers.js` и `schema.graphql`. Разделите файл `business-logic.js` на `authentication/index.js` и `pins/index.js`. Разделите `resolvers.js` на`authentication/resolvers.js`, `pins/resolvers.js` и `search/resolvers.js`. И напоследок разделите `schema.graphql` на три новые директории.
 
-That's it! Using a feature based file structure is a scalable way of organizing code. It may be overkill for small projects, but it pays off in big ones.
+Всё! Использование файловой структуры, основанной на функциональных возможностях — это масштабируемый способ организации кода. Такой подход может быть излишним для небольших проектов, но он с лихвой окупается в больших проектах.
 
-## 3.5 Summary
+## 3.5 Резюме
 
-You learned how to create a GraphQL API using Apollo Server. Starting from just a GraphQL schema, you learned how to wrap that schema with an HTTP layer using `ApolloServer`. You added a database layer using Knex, email based authentication with Nodemailer. In the last step, you organized your project by features using GraphQL Import.
+Вы узнали, как создать API на GraphQL, используя Apollo Server. Начав с простой GraphQL-схемы, вы узнали, как обернуть эту схему HTTP-слоем при помощи ApolloServer. Вы добавили слой базы данных, воспользовавшись Knex, а также аутентификацию по электронной почты с применением Nodemailer. Наконец, вы организовали свой проект по функциональным возможностям с использованием GraphQL Import.
 
-The next chapter will teach you how to create GraphQL clients using Apollo Client. You will learn how to implement a frontend in React that communicates with the GraphQL API you just created.
+В следующей главе вы научитесь, как создавать GraphQL-клиенты на примере Apollo Client, а также сделаете фронтенд на React, который взаимодействует с только что созданным API GraphQL.
 
