@@ -75,7 +75,7 @@ type Subscription {
 
 After that, add a new key called `Subscription` to the resolvers list in `pins/resolvers.js`. Add a type resolver for `pinAdded`, which will be an object with a `subscribe` key. Subscriptions resolvers are not functions, like Query or Mutation resolvers, they are objects with a `subscribe` key that returns `AsyncIterable`.
 
-What is an `AsyncIterable`? Asynchronous iteration is a data access protocol, a way to iterate through asynchronous data sources. [It is an ECMAScript proposal](https://github.com/tc39/proposal-async-iteration), which means it has a high chance of becoming a part of the language. [GraphQL.js subscriptions use them because they will be a part of the Javascript standard eventually](https://github.com/graphql/graphql-js/issues/1135#issuecomment-350928960).
+What is an `AsyncIterable`? Asynchronous iteration is a data access protocol, a way to iterate through asynchronous data sources. [It is an ECMAScript proposal](https://github.com/tc39/proposal-async-iteration), which means it has a high chance of becoming a part of the language. [GraphQL.js subscriptions use them because they will be a part of the JavaScript standard eventually](https://github.com/graphql/graphql-js/issues/1135#issuecomment-350928960).
 
 Anyway, you need to return an `AsyncIterable` object in subscriptions' `subscribe` functions. All subscription compatible PubSub implementations provide a method called `asyncIterator` which receives an event name and return an `AsyncIterable`.
 

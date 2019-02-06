@@ -8,7 +8,7 @@ Let's start by learning about API testing.
 
 ## 6.1 How to test GraphQL APIs
 
-This section will teach you how to test GraphQL APIs using two approaches. The first will test the GraphQL layer, and the second will test the HTTP layer. Both methods will use [Jest](http://facebook.github.io/jest/), a Javascript testing library.
+This section will teach you how to test GraphQL APIs using two approaches. The first will test the GraphQL layer, and the second will test the HTTP layer. Both methods will use [Jest](http://facebook.github.io/jest/), a JavaScript testing library.
 
 The first approach tests the GraphQL layer by sending queries and mutations directly against the app's schema.
 
@@ -778,7 +778,7 @@ Now let's write a test based on a use case of the app. You are going to verify t
 
 Instead of using React to render the App, you will use Enzyme's `mount` function. It performs a full DOM rendering. just like calling `ReactDOM.render`, the difference is that choosing `mount` allows you to use Enzyme's querying and expectations capabilities.
 
-You will pass a mock list instead of an empty array to `MockedProvider`. Mocks are object with two keys, `request` and `result`. `request` is an object that has a `query` key and can have a `variables` key. `result` contains a Javascript object that simulates the server's response. In this case mocks will consist of two elements, the first simulates a `LIST_PINS` query with a list of empty pins as response, and the second simulates a `PINS_SUBSCRIPTION` query with no pin as a response. These are the two requests that App sends when it starts.
+You will pass a mock list instead of an empty array to `MockedProvider`. Mocks are object with two keys, `request` and `result`. `request` is an object that has a `query` key and can have a `variables` key. `result` contains a JavaScript object that simulates the server's response. In this case mocks will consist of two elements, the first simulates a `LIST_PINS` query with a list of empty pins as response, and the second simulates a `PINS_SUBSCRIPTION` query with no pin as a response. These are the two requests that App sends when it starts.
 
 ```js
 // ...

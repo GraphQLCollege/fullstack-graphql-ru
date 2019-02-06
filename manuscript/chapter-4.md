@@ -141,7 +141,7 @@ Congratulations! You have got a working version of PinApp. Too bad that all pins
 
 In this section you will add [Apollo Client](https://www.apollographql.com/client) to PinApp's frontend. You will setup Apollo Client, point it to the API you created in the previous chapter, and send a query to that endpoint.
 
-Apollo Client is a GraphQL Client that provides advanced data loading to Javascript applications. It provides wrappers to many popular Javascript frameworks, like React, React Native, Angular, Vue.js, it also provides Native iOS and Android versions.
+Apollo Client is a GraphQL Client that provides advanced data loading to JavaScript applications. It provides wrappers to many popular JavaScript frameworks, like React, React Native, Angular, Vue.js, it also provides Native iOS and Android versions.
 
 To install it, you need to add three dependencies to `package.json`. These dependencies are `apollo-boost",`, `graphql` and `graphql-tag`. This is what your `"dependencies"` key should look like:
 
@@ -174,7 +174,7 @@ Remember to add `REACT_APP_API_URL=https://pinapp-files.glitch.me` to the `.env`
 
 Once you have created an instance of Apollo Client, you can use it to send queries and mutations to your API. Let's use the `query` method from Apollo Client to fetch the list of pins from the API. This method receives an object with a `query` key. Inside that key you can send queries using the `gql` function from `graphql-tag`.
 
-The `gql` function receives a string written in SDL and transforms it into a Javascript object. `client.query` accepts this Javascript object. Note that `client.query` throws an error if you pass a string directly, without using `gql`.
+The `gql` function receives a string written in SDL and transforms it into a JavaScript object. `client.query` accepts this JavaScript object. Note that `client.query` throws an error if you pass a string directly, without using `gql`.
 
 Another handy feature of `gql` is that many IDEs add syntax highlighting to `gql` calls. Unfortunately, at the moment Glitch does not support this feature. But who knows, maybe in the future it supports `gql` syntax highlighting. And maybe you are reading this in the future and enjoying beautiful GraphQL queries in our Glitch's code examples.
 
